@@ -1,0 +1,63 @@
+[project]
+name = "mmlapipe"
+version = "0.0.1"
+description = "Multimodal Data Pipeline"
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python = ">3.6"
+
+keywords = ["education", "multimodal", "data", "learning", "analytics"]
+
+classifiers = [
+    "Programming Language :: Python :: 3"
+]
+
+dependencies = [
+    'chimerapy',
+    'numpy',
+    'imutils',
+    'opencv-python',
+    'pillow',
+    'dxcam; sys_platform == "win32"',
+]
+
+[project.optional-dependencies]
+test = [
+    'pytest',
+    'pytest-repeat',
+    'pytest-lazy-fixture',
+    'pytest-rerunfailures',
+    'pre-commit',
+]
+
+[project.urls]
+homepath = "https://github.com/oele-isis-vanderbilt/MMLAPIPE"
+documentation = "https://oele-isis-vanderbilt.github.io/MMLAPIPE/"
+repository = "https://github.com/oele-isis-vanderbilt/MMLAPIPE"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# https://setuptools.pypa.io/en/stable/userguide/datafiles.html
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+# Reference:
+# https://stackoverflow.com/questions/4673373/logging-within-pytest-tests
+[tool.pytest.ini_options]
+
+# Logging + CLI
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+# Timeout
+faulthandler_timeout=300
+
+# Ignore warnings
+filterwarnings = "ignore::DeprecationWarning"
