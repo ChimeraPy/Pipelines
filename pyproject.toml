@@ -19,6 +19,9 @@ dependencies = [
     'opencv-python',
     'pillow',
     'dxcam; sys_platform == "win32"',
+    'torch',
+    'torchvision',
+    'seaborn'
 ]
 
 [project.optional-dependencies]

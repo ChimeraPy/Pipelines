@@ -39,7 +39,9 @@ def yolo_pipeline(manager: cp.Manager):
     graph.add_node(yolo_node)
     node_ids.append(yolo_node.id)
 
-    for v_file in VIDEO_FOLDER.iterdir():
+    for i, v_file in enumerate(VIDEO_FOLDER.iterdir()):
+        # if i == 3:
+        #     break
         node = mmlapipe.VideoNode(name=v_file.stem, src=v_file)
         graph.add_node(node)
         graph.add_edge(node, yolo_node)
