@@ -141,7 +141,10 @@ class YOLONode(cp.Node):
         im_list_2d = []
         for i in range(len(renders), 0, -1 * self.per_row_display):
             im_list_2d.append(
-                [renders[i - (j + 1)] for j in range(self.per_row_display)]
+                [
+                    imutils.resize(renders[i - (j + 1)], width=400)
+                    for j in range(self.per_row_display)
+                ]
             )
 
         im_tiles = self.concat_tiles(im_list_2d)
