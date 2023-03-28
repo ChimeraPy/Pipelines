@@ -11,25 +11,20 @@ import mmlapipe
 
 # Constant
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent
-DATA_DIR = GIT_ROOT/'data'/'KinectData'
-SESSION_VIDEOS = {
-    'OELE01': DATA_DIR/'OELE01'/'2022-10-05--11-52-55',
-    'OELE02': DATA_DIR/'OELE02'/'2022-10-05--11-48-33',
-    'OELE03': DATA_DIR/'OELE03'/'2022-10-05--11-48-21',
-    'OELE08': DATA_DIR/'OELE08'/'2022-10-05--11-52-02'
-}
-assert all([v.exists() for v in SESSION_VIDEOS.values()])
+DATA_DIR = GIT_ROOT/'data'
+VIDEO_FOLDER = DATA_DIR/'TestData'
+assert VIDEO_FOLDER.exists()
 
 def show_video(manager: cp.Manager):
 
     graph = cp.Graph()
-    node_names = []
-    for k, v in SESSION_VIDEOS.items():
-        node = mmlapipe.KinectNode(name=k, kinect_data_folder=v, show=True)
+    node_ids = []
+    for v_file in VIDEO_FOLDER.iterdir():
+        node = mmlapipe.VideoNode(name=v_file.stem, src=v_file, show=True)
         graph.add_node(node)
-        node_names.append(node.name)
+        node_ids.append(node.id)
 
-    mapping = {'local': node_names}
+    mapping = {'local': node_ids}
     manager.commit_graph(
         graph=graph,
         mapping=mapping,
@@ -39,18 +34,18 @@ def show_video(manager: cp.Manager):
 def yolo_pipeline(manager: cp.Manager):
 
     graph = cp.Graph()
-    node_names = []
+    node_ids = []
     yolo_node = mmlapipe.YOLONode(name="yolo", classes=['person'])
     graph.add_node(yolo_node)
-    node_names.append(yolo_node.name)
+    node_ids.append(yolo_node.id)
 
-    for k, v in SESSION_VIDEOS.items():
-        node = mmlapipe.KinectNode(name=k, kinect_data_folder=v)
+    for v_file in VIDEO_FOLDER.iterdir():
+        node = mmlapipe.VideoNode(name=v_file.stem, src=v_file)
         graph.add_node(node)
         graph.add_edge(node, yolo_node)
-        node_names.append(node.name)
+        node_ids.append(node.id)
 
-    mapping = {'local': node_names}
+    mapping = {'local': node_ids}
     manager.commit_graph(
         graph=graph,
         mapping=mapping,
@@ -61,7 +56,7 @@ if __name__ == "__main__":
 
     # Create default manager and desired graph
     manager = cp.Manager(logdir=GIT_ROOT/"runs", port=0)
-    worker = cp.Worker(name="local")
+    worker = cp.Worker(name="local", id="local")
     worker.connect(host=manager.host, port=manager.port)
 
     # Wait until workers connect

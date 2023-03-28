@@ -32,3 +32,4 @@ logging.config.dictConfig(LOGGING_CONFIG)
 from .kinect_node import KinectNode
 from .yolo_node import YOLONode
 from .show_node import ShowWindow
+from .video_node import VideoNode

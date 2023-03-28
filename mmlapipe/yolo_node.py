@@ -130,7 +130,7 @@ class YOLONode(cp.Node):
             data_chunk.add(f'xyx-{i}', results.pandas().xyxy[i])
             data_chunk.add(f'render-{i}', renders[i], 'image')
 
-            cv2.imshow(f'{name}-{i}', imutils.resize(renders[i], width=500))
+            cv2.imshow(f'{name}-{i}', imutils.resize(renders[i], width=1000))
             cv2.waitKey(1)
         
         return data_chunk

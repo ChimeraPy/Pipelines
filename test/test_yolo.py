@@ -14,13 +14,13 @@ import mmlapipe
 # Constants
 CWD = pathlib.Path(os.path.abspath(__file__)).parent
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent
-DATA_DIR = GIT_ROOT/'data'/'KinectData'
-TEST_VIDEO_FOLDER = DATA_DIR/'OELE01'/'2022-10-05--11-52-55'
+DATA_DIR = GIT_ROOT/'data'
+TEST_VIDEO_FOLDER = DATA_DIR/'TestData'
 assert TEST_VIDEO_FOLDER.exists()
 
 @pytest.fixture
 def color_cap():
-    return cv2.VideoCapture(str(TEST_VIDEO_FOLDER/'ColorStream.mp4'))
+    return cv2.VideoCapture(str(TEST_VIDEO_FOLDER/'test1.mp4'))
 
 def test_yolo_main(color_cap):
 
