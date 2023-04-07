@@ -5,10 +5,10 @@ from typing import Literal
 import chimerapy as cp
 import cv2
 import imutils
-from chimerapy_orchestrator.utils import register_chimerapy_node
+from chimerapy_orchestrator.utils import source_node
 
 
-@register_chimerapy_node
+@source_node
 class VideoNode(cp.Node):
     def __init__(
         self,

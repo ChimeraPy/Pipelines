@@ -4,8 +4,7 @@ import chimerapy as cp
 import cv2
 import imutils
 import numpy as np
-from chimerapy_orchestrator.utils import register_chimerapy_node
-
+from chimerapy_orchestrator.utils import step_node
 # Reference: https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/
 COCO_ORIGINAL_NAMES = [
     "person",
@@ -91,7 +90,7 @@ COCO_ORIGINAL_NAMES = [
 ]
 
 
-@register_chimerapy_node
+@step_node
 class YOLONode(cp.Node):
     def __init__(
         self,

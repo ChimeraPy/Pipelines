@@ -2,10 +2,10 @@ from typing import Dict
 
 import chimerapy as cp
 import cv2
-from chimerapy_orchestrator.utils import register_chimerapy_node
+from chimerapy_orchestrator.utils import sink_node
 
 
-@register_chimerapy_node(name="ShowWindowMMLAPIPE")
+@sink_node(name="ShowWindowMMLAPIPE")
 class ShowWindow(cp.Node):
     def __init__(self, name="ShowWindowMMLAPIPE", **kwargs):
         super(ShowWindow, self).__init__(name=name, **kwargs)
