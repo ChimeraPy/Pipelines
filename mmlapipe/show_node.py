@@ -2,7 +2,7 @@ from typing import Dict
 
 import chimerapy as cp
 import cv2
-from chimerapy_orchestrator.utils import sink_node
+from chimerapy_orchestrator import sink_node
 
 
 @sink_node(name="ShowWindowMMLAPIPE")
