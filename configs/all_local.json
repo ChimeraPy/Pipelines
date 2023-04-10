@@ -1,0 +1,106 @@
+{
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "VideoNode",
+      "name": "test-1",
+      "kwargs": {
+        "src": "data/TestData/test1.mp4",
+        "show": false,
+        "debug": null
+      }
+    },
+    {
+      "registry_name": "VideoNode",
+      "name": "test-2",
+      "kwargs": {
+        "src": "data/TestData/test2.mp4",
+        "show": false,
+        "debug": null
+      }
+    },
+    {
+      "registry_name": "VideoNode",
+      "name": "test-3",
+      "kwargs": {
+        "src": "data/TestData/test3.mp4",
+        "show": false,
+        "debug": null
+      }
+    },
+    {
+      "registry_name": "VideoNode",
+      "name": "test-4",
+      "kwargs": {
+        "src": "data/TestData/test4.mp4",
+        "show": false,
+        "debug": null
+      }
+    },
+    {
+      "registry_name": "YOLONode",
+      "name": "yolo",
+      "kwargs": {
+        "classes": [
+          "person"
+        ],
+        "per_row_display": 2,
+        "debug": null
+      }
+    },
+    {
+      "registry_name": "ShowWindowMMLAPIPE",
+      "name": "tiled",
+      "kwargs": {}
+    }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "yolo"
+    ],
+    [
+      "test-2",
+      "yolo"
+    ],
+    [
+      "test-3",
+      "yolo"
+    ],
+    [
+      "test-4",
+      "yolo"
+    ],
+    [
+      "yolo",
+      "tiled"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "test-2",
+      "test-3",
+      "test-4",
+      "yolo",
+      "tiled"
+    ]
+  },
+  "discover_nodes_from": [
+    "mmlapipe"
+  ]
+}

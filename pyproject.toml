@@ -21,7 +21,8 @@ dependencies = [
     'dxcam; sys_platform == "win32"',
     'torch',
     'torchvision',
-    'seaborn'
+    'seaborn',
+    'chimerapy-orchestrator @ git+https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator@main#egg=chimerapy_orchestrator',
 ]
 
 [project.optional-dependencies]
