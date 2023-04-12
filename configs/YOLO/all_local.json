@@ -15,7 +15,7 @@
       "registry_name": "VideoNode",
       "name": "test-1",
       "kwargs": {
-        "src": "data/TestData/test1.mp4",
+        "src": "data/MF_SORT/PETS09-S2L1.mp4",
         "show": false,
         "debug": null
       }
@@ -24,7 +24,7 @@
       "registry_name": "VideoNode",
       "name": "test-2",
       "kwargs": {
-        "src": "data/TestData/test2.mp4",
+        "src": "data/MF_SORT/PETS09-S2L1.mp4",
         "show": false,
         "debug": null
       }
@@ -33,7 +33,7 @@
       "registry_name": "VideoNode",
       "name": "test-3",
       "kwargs": {
-        "src": "data/TestData/test3.mp4",
+        "src": "data/MF_SORT/PETS09-S2L1.mp4",
         "show": false,
         "debug": null
       }
@@ -42,7 +42,7 @@
       "registry_name": "VideoNode",
       "name": "test-4",
       "kwargs": {
-        "src": "data/TestData/test4.mp4",
+        "src": "data/MF_SORT/PETS09-S2L1.mp4",
         "show": false,
         "debug": null
       }

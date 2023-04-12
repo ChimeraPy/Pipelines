@@ -42,4 +42,5 @@ class VideoNode(cp.Node):
 
     def teardown(self):
         self.cap.release()
-        cv2.destroyAllWindows()
+        if self.show:
+            cv2.destroyAllWindows()

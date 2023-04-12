@@ -30,6 +30,7 @@ LOGGING_CONFIG = {
 logging.config.dictConfig(LOGGING_CONFIG)
 
 from .kinect_node import KinectNode
+from .mf_sort.detector import MFSortDetector
 from .show_node import ShowWindow
 from .video_node import VideoNode
-from .yolo_node import YOLONode
+# from .yolo_node import YOLONode
