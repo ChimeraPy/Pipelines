@@ -3,8 +3,8 @@ from typing import Dict, List, Literal, Optional
 import chimerapy as cp
 import cv2
 import imutils
-import numpy as np
 from chimerapy_orchestrator import step_node
+from mmlapipe.utils import requires_packages
 
 # Reference: https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/
 COCO_ORIGINAL_NAMES = [
@@ -92,6 +92,7 @@ COCO_ORIGINAL_NAMES = [
 
 
 @step_node
+@requires_packages("yolov5", "torch")
 class YOLONode(cp.Node):
     def __init__(
         self,
