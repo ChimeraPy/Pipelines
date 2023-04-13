@@ -98,6 +98,7 @@ class YOLONode(cp.Node):
         name: str,
         classes: Optional[List[str]] = None,
         per_row_display=2,
+        frames_key: str = "frame",
         debug: Literal["step", "stream"] = None,
     ):
         # Obtain the index of the object in the original list of classes
@@ -108,6 +109,7 @@ class YOLONode(cp.Node):
                 self.interested_classes_idx.append(class_index)
 
         self.per_row_display = per_row_display
+        self.frames_key = frames_key
 
         super().__init__(name=name, debug=debug)
 
@@ -125,7 +127,7 @@ class YOLONode(cp.Node):
         # Aggreate all inputs
         imgs = []
         for name, data_chunk in data_chunks.items():
-            imgs.append(data_chunk.get("color")["value"])
+            imgs.append(data_chunk.get(self.frames_key)["value"])
 
         # Apply the model
         results = self.model(imgs)
