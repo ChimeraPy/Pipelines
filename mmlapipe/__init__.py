@@ -33,3 +33,5 @@ from .kinect_node import KinectNode
 from .show_node import ShowWindow
 from .video_node import VideoNode
 from .yolo_node import YOLONode
+from .generic_nodes.video_nodes import ShowWindows
+from .generic_nodes.video_nodes import Video
