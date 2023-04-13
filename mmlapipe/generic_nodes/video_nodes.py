@@ -57,14 +57,13 @@ class Video(cp.Node):
         self.frame_rate = frame_rate
         self.include_meta = include_meta
         self.frame_key = frame_key
+        self.cp: Optional[cv2.VideoCapture] = None
         super().__init__(name=name, **kwargs)
 
     def prep(self) -> None:
         self.cp = cv2.VideoCapture(self.video_src)
 
     def step(self) -> cp.DataChunk:
-        time.sleep(1 / self.frame_rate)
-
         data_chunk = cp.DataChunk()
         ret, frame = self.cp.read()
 
@@ -83,7 +82,8 @@ class Video(cp.Node):
                 2,
             )
 
-        frame = imutils.resize(frame, width=self.width, height=self.height)
+        if self.width or self.height:
+            frame = imutils.resize(frame, width=self.width, height=self.height)
 
         if self.debug:
             cv2.imshow(
@@ -105,7 +105,7 @@ class Video(cp.Node):
                     "belongs_to_video_src": bool(ret),
                 },
             )
-
+        time.sleep(1 / self.frame_rate)
         return data_chunk
 
     def teardown(self) -> None:
@@ -126,8 +126,8 @@ class ShowWindows(cp.Node):
         The key to use for the frame in the data chunk
     window_xy: Tuple[int, int], optional (default: None)
         The x, y coordinates of the first window. Use this to position the window(s)
-    num_rows: int, optional (default: 1)
-        The number of rows of windows to show
+    items_per_row: int, optional (default: 2)
+        The number of rows of windows to show. This is used to position the windows
     **kwargs
         Additional keyword arguments to pass to the Node constructor
     """
@@ -136,17 +136,18 @@ class ShowWindows(cp.Node):
         self,
         name: str = "ShowWindow",
         frames_key: str = "frame",
+        items_per_row: int = 2,
         window_xy: Optional[Tuple[int, int]] = None,
-        num_rows: int = 2,
         **kwargs,
     ) -> None:
         self.frames_key = frames_key
         self.window_xy = np.array(window_xy, dtype=int) if window_xy else None
-        self.num_rows = num_rows
+        self.items_per_row = items_per_row
         super().__init__(name=name, **kwargs)
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> None:
-        PADDING = 10
+        max_f_height = 0
+        prev_position = None
         for idx, (name, data_chunk) in enumerate(data_chunks.items()):
             frame = data_chunk.get(self.frames_key)["value"]
             maybe_metadata = data_chunk.get("metadata")
@@ -155,20 +156,23 @@ class ShowWindows(cp.Node):
             )
 
             cv2.imshow(window_id, frame)
-
             if self.window_xy is not None:
-                if idx == 0:
-                    window_xy = self.window_xy
+                if prev_position is None:
+                    x, y = self.window_xy
                 else:
-                    if idx % self.num_rows == 0:
-                        window_xy += (
-                            self.window_xy[0] + frame.shape[1],
-                            self.window_xy[1],
-                        )
+                    if idx % self.items_per_row == 0:
+                        x, y = self.window_xy
+                        y += prev_position[1] + max_f_height
                     else:
-                        window_xy += (0, frame.shape[0])
-                print(f"Moving window {window_id} to {window_xy}")
-                cv2.moveWindow(window_id, *(window_xy + PADDING))
+                        x, y = (
+                            prev_position[0] + prev_position[2],
+                            prev_position[1] - 76,
+                        )
+                        if prev_position[-1] > max_f_height:
+                            max_f_height = prev_position[-1]
+
+                prev_position = cv2.getWindowImageRect(window_id)
+                cv2.moveWindow(window_id, x, y)
             cv2.waitKey(1)
 
     def _get_window_id(self, src_name: str, metadata: Optional[Dict[str, Any]]) -> str:
@@ -180,3 +184,6 @@ class ShowWindows(cp.Node):
                 window_id = f"{src_name}_{src_id[0:6]}"
 
         return window_id
+
+    def teardown(self) -> None:
+        cv2.destroyAllWindows()

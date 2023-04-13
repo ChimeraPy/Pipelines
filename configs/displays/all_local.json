@@ -16,7 +16,7 @@
         "name": "test-1",
         "kwargs": {
           "video_src": "data/TestData/test1.mp4",
-          "width": 640,
+          "width": 500,
           "height": 480,
           "frame_key": "frame",
           "include_meta": true
@@ -27,7 +27,7 @@
         "name": "test-2",
         "kwargs": {
           "video_src": "data/TestData/test2.mp4",
-          "width": 640,
+          "width": 500,
           "height": 480,
           "frame_key": "frame",
           "include_meta": true
@@ -38,16 +38,32 @@
         "name": "test-3",
         "kwargs": {
           "video_src": "data/TestData/test3.mp4",
-          "width": 640,
+          "width": 500,
           "height": 480,
           "frame_key": "frame",
           "include_meta": true
         }
       },
       {
+        "registry_name": "MMLAPIPE_Video",
+        "name": "test-4",
+        "kwargs": {
+          "video_src": "data/TestData/test4.mp4",
+          "width": 500,
+          "height": 480,
+          "frame_key": "frame",
+          "include_meta": true
+        }
+    },
+      {
         "registry_name": "MMLAPIPE_ShowWindows",
         "name": "show",
         "kwargs": {
+          "window_xy": [
+            300,
+            300
+          ],
+          "items_per_row": 2
         }
       }
     ],
@@ -61,7 +77,11 @@
       ], [
         "test-3",
         "show"
-      ]
+      ],
+        [
+            "test-4",
+            "show"
+        ]
     ],
     "manager_config": {
       "logdir": "cp-logs",
@@ -72,6 +92,7 @@
         "test-1",
         "test-2",
         "test-3",
+        "test-4",
         "show"
       ]
     },
@@ -79,4 +100,3 @@
       "mmlapipe"
     ]
   }
-  

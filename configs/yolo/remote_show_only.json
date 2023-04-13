@@ -18,39 +18,47 @@
   },
   "nodes": [
     {
-      "registry_name": "VideoNode",
+      "registry_name": "MMLAPIPE_Video",
       "name": "test-1",
       "kwargs": {
-        "src": "data/TestData/test1.mp4",
-        "show": false,
-        "debug": null
+        "video_src": "data/TestData/test1.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true
       }
     },
     {
-      "registry_name": "VideoNode",
+      "registry_name": "MMLAPIPE_Video",
       "name": "test-2",
       "kwargs": {
-        "src": "data/TestData/test2.mp4",
-        "show": false,
-        "debug": null
+        "video_src": "data/TestData/test2.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true
       }
     },
     {
-      "registry_name": "VideoNode",
+      "registry_name": "MMLAPIPE_Video",
       "name": "test-3",
       "kwargs": {
-        "src": "data/TestData/test3.mp4",
-        "show": false,
-        "debug": null
+        "video_src": "data/TestData/test3.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true
       }
     },
     {
-      "registry_name": "VideoNode",
+      "registry_name": "MMLAPIPE_Video",
       "name": "test-4",
       "kwargs": {
-        "src": "data/TestData/test4.mp4",
-        "show": false,
-        "debug": null
+        "video_src": "data/TestData/test4.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true
       }
     },
     {
@@ -65,9 +73,11 @@
       }
     },
     {
-      "registry_name": "ShowWindowMMLAPIPE",
+      "registry_name": "MMLAPIPE_ShowWindows",
       "name": "tiled",
-      "kwargs": {}
+      "kwargs": {
+        "frames_key": "tiled"
+      }
     }
   ],
   "adj": [
