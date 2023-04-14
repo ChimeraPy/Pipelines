@@ -58,10 +58,12 @@ class Video(cp.Node):
         self.include_meta = include_meta
         self.frame_key = frame_key
         self.cp: Optional[cv2.VideoCapture] = None
+        self.frame_count = 0
         super().__init__(name=name, **kwargs)
 
     def prep(self) -> None:
         self.cp = cv2.VideoCapture(self.video_src)
+        self.frame_count = 0
 
     def step(self) -> cp.DataChunk:
         data_chunk = cp.DataChunk()
@@ -92,6 +94,7 @@ class Video(cp.Node):
             cv2.waitKey(1)
 
         data_chunk.add(self.frame_key, frame, "image")
+        self.frame_count += 1
 
         if self.include_meta:
             data_chunk.add(
@@ -102,6 +105,7 @@ class Video(cp.Node):
                     "source_id": self.id,
                     "source_name": self.name,
                     "frame_rate": self.frame_rate,
+                    "frame_count": self.frame_count,
                     "belongs_to_video_src": bool(ret),
                 },
             )

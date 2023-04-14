@@ -33,3 +33,5 @@ from .kinect_node import KinectNode
 from .yolo_node import YOLONode
 from .generic_nodes.video_nodes import ShowWindows
 from .generic_nodes.video_nodes import Video
+from .mf_sort.detector import MFSortDetector
+from .mf_sort.bbox_painter import BBoxPainter

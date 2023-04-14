@@ -1,0 +1,132 @@
+{
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "test-1",
+      "kwargs": {
+        "video_src": "data/TestData/test1.mp4",
+        "width": 640,
+        "height": null,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "test-2",
+      "kwargs": {
+        "video_src": "data/TestData/test2.mp4",
+        "width": 640,
+        "height": null,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "test-3",
+      "kwargs": {
+        "video_src": "data/TestData/test3.mp4",
+        "width": 640,
+        "height": null,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "test-4",
+      "kwargs": {
+        "video_src": "data/TestData/test4.mp4",
+        "width": 640,
+        "height": null,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortDetector",
+      "name": "mf-sort-detector",
+      "kwargs": {
+        "weights": "weights.pt",
+        "device": "cuda",
+        "frames_key": "image"
+      }
+    }, {
+      "registry_name": "MMLAPIPE_BBoxPainter",
+      "name": "bbox-painter",
+      "kwargs": {
+        "frames_srcs": ["test-1", "test-2", "test-3", "test-4"],
+        "bboxes_srcs": ["mf-sort-detector"],
+        "frames_key": "image"
+      }
+    }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "mf-sort-detector"
+    ],
+    [
+      "test-2",
+      "mf-sort-detector"
+    ],
+    [
+      "test-3",
+      "mf-sort-detector"
+    ],
+    [
+      "test-4",
+      "mf-sort-detector"
+    ],
+    [
+      "mf-sort-detector",
+      "bbox-painter"
+    ],
+    [
+      "test-1",
+      "bbox-painter"
+    ],
+    [
+      "test-2",
+      "bbox-painter"
+    ],
+    [
+      "test-3",
+      "bbox-painter"
+    ],
+    [
+      "test-4",
+      "bbox-painter"
+    ]
+
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "test-2",
+      "test-3",
+      "test-4",
+      "mf-sort-detector",
+      "bbox-painter"
+    ]
+  },
+  "discover_nodes_from": [
+    "mmlapipe"
+  ]
+}
