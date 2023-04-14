@@ -7,6 +7,12 @@
         "name": "local",
         "id": "local",
         "description": "local worker for the MMLA pipeline demo with a video node"
+      },
+      {
+        "name": "worker-1",
+        "id": "worker-1",
+        "description": "worker for the MMLA pipeline demo with a video node",
+        "remote": true
       }
     ]
   },
@@ -170,7 +176,9 @@
       "test-3",
       "test-4",
       "mf-sort-detector",
-      "bbox-painter",
+      "bbox-painter"
+    ],
+    "worker-1": [
       "mf-sort-tracker-1",
       "mf-sort-tracker-2",
       "mf-sort-tracker-3",

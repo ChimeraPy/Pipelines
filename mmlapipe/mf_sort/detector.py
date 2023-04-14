@@ -1,14 +1,15 @@
 import tempfile
-from typing import Dict, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 import chimerapy as cp
 import cv2
 import numpy as np
 import requests
-import tqdm
 from chimerapy_orchestrator import step_node
 from mf_sort.detector import Detector
+from tqdm import tqdm
 
+from mmlapipe.mf_sort.data import BBoxes, Frame
 from mmlapipe.utils import requires_packages
 
 
@@ -46,6 +47,7 @@ class MFSortDetector(cp.Node):
         iou_thresh: float = 0.5,
         name: str = "MFSortDetector",
         frames_key: str = "frame",
+        bboxes_key: str = "bboxes",
         **kwargs,
     ):
         self.weights = weights
@@ -57,6 +59,7 @@ class MFSortDetector(cp.Node):
             "iou_thresh": iou_thresh,
         }
         self.frames_key = frames_key
+        self.bboxes_key = bboxes_key
         self.detector: Optional[Detector] = None
         super().__init__(name=name, **kwargs)
 
@@ -68,23 +71,35 @@ class MFSortDetector(cp.Node):
                 )
                 self.detector = Detector(**self.detector_kwargs)
         else:
+            self.detector_kwargs["device"] = "cuda"
             self.detector = Detector(**self.detector_kwargs)
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         ret_chunk = cp.DataChunk()
+        bboxes = []
         for name, data_chunk in data_chunks.items():
             self.logger.debug(f"{self}: got from {name}, data={data_chunk}")
-            img = data_chunk.get(self.frames_key)["value"]
-            detections = self.detector.predict([img])[0]
-            bboxes = [detection.tlwh.tolist() for detection in detections]
-            ret_chunk.add(f"{self.name}:{name}:bboxes", bboxes)
-            metadata = data_chunk.get("metadata")["value"]
-            ret_chunk.add(f"{self.name}:{name}:metadata", metadata)
-            if self.debug:
-                for detection in detections:
-                    self.paint(img, *detection.tlwh.astype(int))
-                cv2.imshow(name, img)
-                cv2.waitKey(1)
+            frames: List[Frame] = data_chunk.get(self.frames_key)["value"]
+            for frame in frames:
+                img = frame.arr
+                detections = self.detector.predict([img])[0]
+                bboxes.append(
+                    BBoxes(
+                        array=img,
+                        detections=detections,
+                        src_id=frame.src_id,
+                        frame_count=frame.frame_count,
+                    )
+                )
+
+                if self.debug:
+                    for detection in detections:
+                        self.paint(img, *detection.tlwh.astype(int))
+                    cv2.imshow(name, img)
+                    cv2.waitKey(1)
+
+        ret_chunk.add(self.bboxes_key, bboxes)
+
         return ret_chunk
 
     @staticmethod
@@ -96,7 +111,7 @@ class MFSortDetector(cp.Node):
         resp = requests.get(url, stream=True)
         total = int(resp.headers.get("content-length", 0))
         with open(fname, "wb") as file, tqdm(
-            desc=fname,
+            desc="Downloading weights",
             total=total,
             unit="iB",
             unit_scale=True,
