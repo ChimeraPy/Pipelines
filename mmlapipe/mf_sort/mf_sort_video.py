@@ -2,11 +2,11 @@ import chimerapy as cp
 from chimerapy_orchestrator import source_node
 
 from mmlapipe.generic_nodes.video_nodes import Video
-from mmlapipe.mf_sort.data import Frame
+from mmlapipe.mf_sort.data import MFSortFrame
 
 
-@source_node(name="MMLAPIPE_IdentifiableVideo")
-class IdentifiableVideo(Video):
+@source_node(name="MMLAPIPE_MFSortVideo")
+class MFSortVideo(Video):
     """A video node that returns a Frame object with identifiable metadata."""
 
     def __init__(self, *args, **kwargs):
@@ -21,7 +21,8 @@ class IdentifiableVideo(Video):
         frame_count = data_chunk.get("metadata")["value"]["frame_count"]
 
         ret_chunk.add(
-            self.frame_key, [Frame(frame_arr, src_id=src_id, frame_count=frame_count)]
+            self.frame_key,
+            [MFSortFrame(frame_arr, src_id=src_id, frame_count=frame_count)],
         )
 
         return ret_chunk

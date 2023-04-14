@@ -18,11 +18,11 @@
   },
   "nodes": [
     {
-      "registry_name": "MMLAPIPE_IdentifiableVideo",
+      "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-1",
       "kwargs": {
         "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
-        "width": 640,
+        "width": 400,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
@@ -30,11 +30,11 @@
       }
     },
     {
-      "registry_name": "MMLAPIPE_IdentifiableVideo",
+      "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-2",
       "kwargs": {
         "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
-        "width": 640,
+        "width": 400,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
@@ -42,11 +42,11 @@
       }
     },
     {
-      "registry_name": "MMLAPIPE_IdentifiableVideo",
+      "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-3",
       "kwargs": {
-        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
-        "width": 640,
+        "video_src": 0,
+        "width": 400,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
@@ -54,11 +54,11 @@
       }
     },
     {
-      "registry_name": "MMLAPIPE_IdentifiableVideo",
+      "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-4",
       "kwargs": {
         "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
-        "width": 640,
+        "width": 400,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
@@ -71,8 +71,7 @@
       "kwargs": {
         "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
         "device": "cuda",
-        "frames_key": "image",
-        "bboxes_key": "bboxes"
+        "frames_key": "image"
       }
     },
     {
@@ -83,35 +82,35 @@
       }
     },
     {
-      "registry_name": "MMLAPIPE_MF_SORTTracker",
+      "registry_name": "MMLAPIPE_MFSortTracker",
       "name": "mf-sort-tracker-1",
       "kwargs": {
-        "bboxes_key": "bboxes",
-        "source_key": "test-1"
+        "source_key": "test-1",
+        "frames_key": "image"
       }
     },
     {
-      "registry_name": "MMLAPIPE_MF_SORTTracker",
+      "registry_name": "MMLAPIPE_MFSortTracker",
       "name": "mf-sort-tracker-2",
       "kwargs": {
-        "bboxes_key": "bboxes",
-        "source_key": "test-2"
+        "source_key": "test-2",
+        "frames_key": "image"
       }
-  },
+    },
     {
-      "registry_name": "MMLAPIPE_MF_SORTTracker",
+      "registry_name": "MMLAPIPE_MFSortTracker",
       "name": "mf-sort-tracker-3",
       "kwargs": {
-        "bboxes_key": "bboxes",
-        "source_key": "test-3"
+        "source_key": "test-3",
+        "frames_key": "image"
       }
-  },
+    },
     {
-      "registry_name": "MMLAPIPE_MF_SORTTracker",
+      "registry_name": "MMLAPIPE_MFSortTracker",
       "name": "mf-sort-tracker-4",
       "kwargs": {
-        "bboxes_key": "bboxes",
-        "source_key": "test-4"
+        "source_key": "test-4",
+        "frames_key": "image"
       }
     }
   ],

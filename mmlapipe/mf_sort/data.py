@@ -1,57 +1,34 @@
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Optional, Tuple
 
 import numpy as np
 from mf_sort import Detection
 
 
-class Identifiable:
-    def same_origin(self, other: "Identifiable"):
-        return other.identifier() == self.identifier()
+@dataclass
+class MFSortTrackedDetections:
+    """Bounding Boxes for a frame from a video source."""
 
-    def identifier(self):
-        raise NotImplementedError
+    tracker_id: Optional[int] = None
+    color: Tuple[int, int, int] = (0, 255, 0)
+    bboxes: List[Detection] = field(default_factory=list)
+
+    def get_text(self):
+        if self.tracker_id is not None:
+            return f"Tracker: {self.tracker_id}"
+
+    def __repr__(self):
+        return f"<MFSortDetections {self.tracker_id}>"
 
 
-class Frame(Identifiable):
+@dataclass
+class MFSortFrame:
     """A frame from a video source."""
-    def __init__(self, arr: np.ndarray, frame_count: str, src_id: str):
-        self.arr = arr
-        self.frame_count = frame_count
-        self.src_id = src_id
 
-    def identifier(self):
-        return {
-            "src_id": self.src_id,
-            "frame_count": self.frame_count,
-        }
+    arr: np.ndarray
+    frame_count: int
+    src_id: str
+    detections: List[MFSortTrackedDetections] = field(default_factory=list)
 
     def __repr__(self):
         return f"<Frame from {self.src_id} {self.frame_count}>"
-
-
-class BBoxes(Identifiable):
-    """A frame with bounding boxes."""
-    def __init__(
-        self,
-        array: np.ndarray,
-        detections: List[Detection],
-        frame_count: str,
-        src_id: str,
-        color=None,
-        text=None,
-    ):
-        self.array = array
-        self.detections = detections
-        self.frame_count = frame_count
-        self.src_id = src_id
-        self.color = color
-        self.text = text
-
-    def identifier(self):
-        return {
-            "src_id": self.src_id,
-            "frame_count": self.frame_count,
-        }
-
-    def __repr__(self):
-        return f"<BBoxes from {self.src_id} {self.frame_count}>"

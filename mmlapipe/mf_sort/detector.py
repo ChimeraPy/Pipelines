@@ -9,7 +9,7 @@ from chimerapy_orchestrator import step_node
 from mf_sort.detector import Detector
 from tqdm import tqdm
 
-from mmlapipe.mf_sort.data import BBoxes, Frame
+from mmlapipe.mf_sort.data import MFSortFrame, MFSortTrackedDetections
 from mmlapipe.utils import requires_packages
 
 
@@ -47,7 +47,6 @@ class MFSortDetector(cp.Node):
         iou_thresh: float = 0.5,
         name: str = "MFSortDetector",
         frames_key: str = "frame",
-        bboxes_key: str = "bboxes",
         **kwargs,
     ):
         self.weights = weights
@@ -59,7 +58,6 @@ class MFSortDetector(cp.Node):
             "iou_thresh": iou_thresh,
         }
         self.frames_key = frames_key
-        self.bboxes_key = bboxes_key
         self.detector: Optional[Detector] = None
         super().__init__(name=name, **kwargs)
 
@@ -76,20 +74,20 @@ class MFSortDetector(cp.Node):
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         ret_chunk = cp.DataChunk()
-        bboxes = []
+        ret_frames = []
         for name, data_chunk in data_chunks.items():
             self.logger.debug(f"{self}: got from {name}, data={data_chunk}")
-            frames: List[Frame] = data_chunk.get(self.frames_key)["value"]
+            frames: List[MFSortFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr
                 detections = self.detector.predict([img])[0]
-                bboxes.append(
-                    BBoxes(
-                        array=img,
-                        detections=detections,
-                        src_id=frame.src_id,
-                        frame_count=frame.frame_count,
-                    )
+                new_frame = MFSortFrame(
+                    arr=img,
+                    frame_count=frame.frame_count,
+                    src_id=frame.src_id,
+                    detections=[
+                        MFSortTrackedDetections(tracker_id=None, bboxes=detections)
+                    ],
                 )
 
                 if self.debug:
@@ -98,7 +96,9 @@ class MFSortDetector(cp.Node):
                     cv2.imshow(name, img)
                     cv2.waitKey(1)
 
-        ret_chunk.add(self.bboxes_key, bboxes)
+                ret_frames.append(new_frame)
+
+        ret_chunk.add(self.frames_key, ret_frames)
 
         return ret_chunk
 

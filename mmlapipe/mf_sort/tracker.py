@@ -6,13 +6,13 @@ from chimerapy_orchestrator import step_node
 from mf_sort import MF_SORT
 from mf_sort.detection import Detection
 
-from mmlapipe.mf_sort.data import BBoxes
+from mmlapipe.mf_sort.data import MFSortFrame, MFSortTrackedDetections
 from mmlapipe.utils import requires_packages
 
 
-@step_node(name="MMLAPIPE_MF_SORTTracker")
+@step_node(name="MMLAPIPE_MFSortTracker")
 @requires_packages("mf_sort")
-class MF_SORTTracker(cp.Node):
+class MFSortTracker(cp.Node):
     """A node that uses MF_SORT tracker to track objects in a video stream.
 
     Parameters
@@ -34,6 +34,7 @@ class MF_SORTTracker(cp.Node):
     **kwargs
         Additional keyword arguments to pass to the Node constructor
     """
+
     def __init__(
         self,
         source_key: str,
@@ -42,10 +43,9 @@ class MF_SORTTracker(cp.Node):
         iou_threshold: float = 0.7,
         name="MF_SORTTracker",
         target_class: int = 0,
-        bboxes_key: str = "bboxes",
+        frames_key: str = "frame",
         **kwargs,
     ):
-        self.bboxes_key = bboxes_key
         self.tracker_kwargs = {
             "max_age": max_age,
             "min_hits": min_hits,
@@ -53,6 +53,7 @@ class MF_SORTTracker(cp.Node):
         }
         self.target_class = target_class
         self.source_key = source_key
+        self.frames_key = frames_key
 
         self.tracker: Optional[MF_SORT] = None
         super().__init__(name=name, **kwargs)
@@ -63,44 +64,65 @@ class MF_SORTTracker(cp.Node):
             0, 255, size=(200, 3), dtype="int"
         )  # UpTo 200 Tracked Objects
 
+    def _filter_detections(
+        self, tracked_detections: List[MFSortTrackedDetections]
+    ) -> List[Detection]:
+        filtered_detections = []
+
+        for detection in tracked_detections:
+            for bbox in detection.bboxes:
+                if bbox.cls == self.target_class:
+                    filtered_detections.append(bbox)
+
+        return filtered_detections
+
+    def _tracker_step(
+        self, detections: List[Detection]
+    ) -> List[MFSortTrackedDetections]:
+        results = self.tracker.step(detections)
+
+        detections_by_track_id = {}
+
+        for trk, trk_id in results:
+            if trk_id not in detections_by_track_id:
+                detections_by_track_id[trk_id] = []
+
+            det = Detection(
+                np.squeeze(trk.tlwh.copy()),
+                trk.confidence,
+                trk.cls,
+            )
+
+            detections_by_track_id[trk_id].append(det)
+
+        return [
+            MFSortTrackedDetections(
+                tracker_id=trk_id,
+                color=tuple(int(i) for i in self.COLORS[trk_id % len(self.COLORS)]),
+                bboxes=detections,
+            )
+            for trk_id, detections in detections_by_track_id.items()
+        ]
+
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         ret_chunk = cp.DataChunk()
-        tracked_bboxes = []
+        tracked_frames = []
 
         for name, data_chunk in data_chunks.items():
-            bboxes: List[BBoxes] = data_chunk.get(self.bboxes_key)["value"]
-            for bbox in bboxes:
-                if self.source_key == bbox.src_id:
-                    filtered_detections = [
-                        det for det in bbox.detections if det.cls == self.target_class
-                    ]
-                    results = self.tracker.step(filtered_detections)
-                    detections_by_track_id = {}
+            frames: List[MFSortFrame] = data_chunk.get(self.frames_key)["value"]
+            for frame in frames:
+                if self.source_key == frame.src_id:
+                    filtered_detections = self._filter_detections(frame.detections)
+                    frame_detections = self._tracker_step(filtered_detections)
 
-                    for trk, trk_id in results:
-                        if trk_id not in detections_by_track_id:
-                            detections_by_track_id[trk_id] = []
-                        det = Detection(
-                            np.squeeze(trk.tlwh.copy()),
-                            trk.confidence,
-                            trk.cls,
+                    tracked_frames.append(
+                        MFSortFrame(
+                            arr=frame.arr,
+                            frame_count=frame.frame_count,
+                            src_id=frame.src_id,
+                            detections=frame_detections,
                         )
-                        detections_by_track_id[trk_id].append(det)
+                    )
 
-                    for trk_id, detections in detections_by_track_id.items():
-                        tracked_bboxes.append(
-                            BBoxes(
-                                src_id=bbox.src_id,
-                                frame_count=bbox.frame_count,
-                                detections=detections,
-                                array=bbox.array,
-                                text=f"Track ID: {trk_id}",
-                                color=tuple(
-                                    int(i)
-                                    for i in self.COLORS[trk_id % len(self.COLORS)]
-                                ),
-                            )
-                        )
-
-        ret_chunk.add(self.bboxes_key, tracked_bboxes)
+        ret_chunk.add(self.frames_key, tracked_frames)
         return ret_chunk
