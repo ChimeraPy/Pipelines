@@ -28,7 +28,6 @@ LOGGING_CONFIG = {
 
 # Setup the logging configuration
 logging.config.dictConfig(LOGGING_CONFIG)
-logging.disable(logging.INFO)
 
 from .kinect_node import KinectNode
 from .yolo_node import YOLONode
