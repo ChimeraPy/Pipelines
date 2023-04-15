@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import chimerapy as cp
 import cv2
@@ -17,12 +17,20 @@ class BBoxPainter(cp.Node):
         frames_key: str = "frame",
         name: str = "BBoxPainter",
         **kwargs,
-    ):
+    ) -> None:
         self.frames_key = frames_key
         super().__init__(name=name, **kwargs)
 
     @staticmethod
-    def bbox_plot(img: np.ndarray, t, l, w, h, color=(0, 255, 0), thickness=2):
+    def bbox_plot(
+        img: np.ndarray,
+        t: int,
+        l: int,
+        w: int,
+        h: int,
+        color: Tuple[int, int, int] = (0, 255, 0),
+        thickness: int = 2,
+    ) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), color, thickness)
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:

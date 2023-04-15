@@ -48,7 +48,7 @@ class MFSortDetector(cp.Node):
         name: str = "MFSortDetector",
         frames_key: str = "frame",
         **kwargs,
-    ):
+    ) -> None:
         self.weights = weights
         self.detector_kwargs = {
             "weights": weights,
@@ -61,7 +61,7 @@ class MFSortDetector(cp.Node):
         self.detector: Optional[Detector] = None
         super().__init__(name=name, **kwargs)
 
-    def prep(self):
+    def prep(self) -> None:
         if self.detector_kwargs["weights"].startswith("http"):
             with tempfile.NamedTemporaryFile(suffix=".pt") as f:
                 self.detector_kwargs["weights"] = self.download_weights(
@@ -103,13 +103,14 @@ class MFSortDetector(cp.Node):
         return ret_chunk
 
     @staticmethod
-    def paint(img: np.ndarray, t: int, l: int, w: int, h: int):
+    def paint(img: np.ndarray, t: int, l: int, w: int, h: int) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), (0, 255, 0), 2)
 
     @staticmethod
-    def download_weights(url: str, fname: str, chunk_size=1024):
+    def download_weights(url: str, fname: str, chunk_size=1024) -> str:
         resp = requests.get(url, stream=True)
         total = int(resp.headers.get("content-length", 0))
+
         with open(fname, "wb") as file, tqdm(
             desc="Downloading weights",
             total=total,
@@ -120,4 +121,5 @@ class MFSortDetector(cp.Node):
             for data in resp.iter_content(chunk_size=chunk_size):
                 size = file.write(data)
                 bar.update(size)
+
         return fname

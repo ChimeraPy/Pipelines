@@ -45,7 +45,7 @@ class MFSortTracker(cp.Node):
         target_class: int = 0,
         frames_key: str = "frame",
         **kwargs,
-    ):
+    ) -> None:
         self.tracker_kwargs = {
             "max_age": max_age,
             "min_hits": min_hits,
@@ -58,7 +58,7 @@ class MFSortTracker(cp.Node):
         self.tracker: Optional[MF_SORT] = None
         super().__init__(name=name, **kwargs)
 
-    def prep(self):
+    def prep(self) -> None:
         self.tracker = MF_SORT(**self.tracker_kwargs)
         self.COLORS = np.random.randint(
             0, 255, size=(200, 3), dtype="int"
@@ -125,4 +125,5 @@ class MFSortTracker(cp.Node):
                     )
 
         ret_chunk.add(self.frames_key, tracked_frames)
+
         return ret_chunk

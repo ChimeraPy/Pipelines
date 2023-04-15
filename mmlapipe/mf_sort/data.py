@@ -13,11 +13,11 @@ class MFSortTrackedDetections:
     color: Tuple[int, int, int] = (0, 255, 0)
     bboxes: List[Detection] = field(default_factory=list)
 
-    def get_text(self):
+    def get_text(self) -> Optional[str]:
         if self.tracker_id is not None:
             return f"Tracker: {self.tracker_id}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<MFSortDetections {self.tracker_id}>"
 
 
@@ -30,5 +30,5 @@ class MFSortFrame:
     src_id: str
     detections: List[MFSortTrackedDetections] = field(default_factory=list)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Frame from {self.src_id} {self.frame_count}>"

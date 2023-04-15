@@ -9,7 +9,7 @@ from mmlapipe.mf_sort.data import MFSortFrame
 class MFSortVideo(Video):
     """A video node that returns a Frame object with identifiable metadata."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.include_meta = True
 

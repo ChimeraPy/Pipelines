@@ -22,6 +22,7 @@ dependencies = [
     'torch',
     'torchvision',
     'seaborn',
+    'requests',
     'chimerapy-orchestrator @ git+https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator@main#egg=chimerapy_orchestrator',
 ]
 
@@ -32,6 +33,10 @@ test = [
     'pytest-lazy-fixture',
     'pytest-rerunfailures',
     'pre-commit',
+]
+
+mfsort = [
+    'mf_sort[yolo] @ git+https://github.com/kbvatral/MF-SORT.git@master#egg=mf_sort'
 ]
 
 [project.urls]
