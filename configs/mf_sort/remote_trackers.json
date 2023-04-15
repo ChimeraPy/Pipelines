@@ -1,0 +1,190 @@
+{
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      },
+      {
+        "name": "worker-1",
+        "id": "worker-1",
+        "description": "worker for the MMLA pipeline demo with a video node",
+        "remote": true
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-1",
+      "kwargs": {
+        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
+        "width": 400,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-2",
+      "kwargs": {
+        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
+        "width": 400,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-3",
+      "kwargs": {
+        "video_src": 0,
+        "width": 400,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-4",
+      "kwargs": {
+        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
+        "width": 400,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortDetector",
+      "name": "mf-sort-detector",
+      "kwargs": {
+        "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
+        "device": "cuda",
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_BBoxPainter",
+      "name": "bbox-painter",
+      "kwargs": {
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-1",
+      "kwargs": {
+        "source_key": "test-1",
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-2",
+      "kwargs": {
+        "source_key": "test-2",
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-3",
+      "kwargs": {
+        "source_key": "test-3",
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-4",
+      "kwargs": {
+        "source_key": "test-4",
+        "frames_key": "image"
+      }
+    }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "mf-sort-detector"
+    ],
+    [
+      "test-2",
+      "mf-sort-detector"
+    ],
+    [
+      "test-3",
+      "mf-sort-detector"
+    ],
+    [
+      "test-4",
+      "mf-sort-detector"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-1"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-2"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-3"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-4"
+    ],
+    [
+      "mf-sort-tracker-1",
+      "bbox-painter"
+    ],
+    [
+      "mf-sort-tracker-2",
+      "bbox-painter"
+    ],
+    [
+      "mf-sort-tracker-3",
+      "bbox-painter"
+    ],
+    [
+      "mf-sort-tracker-4",
+      "bbox-painter"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "test-2",
+      "test-3",
+      "test-4",
+      "mf-sort-detector",
+      "bbox-painter"
+    ],
+    "worker-1": [
+      "mf-sort-tracker-1",
+      "mf-sort-tracker-2",
+      "mf-sort-tracker-3",
+      "mf-sort-tracker-4"
+    ]
+  },
+  "discover_nodes_from": [
+    "mmlapipe"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-1",
+      "kwargs": {
+        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
+        "width": 640,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortDetector",
+      "name": "mf-sort-detector",
+      "kwargs": {
+        "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
+        "device": "cuda",
+        "imgsz": 640,
+        "frames_key": "image"
+      }
+    },
+    {
+      "registry_name": "MMLAPIPE_BBoxPainter",
+      "name": "bbox-painter",
+      "kwargs": {
+        "frames_key": "image"
+      }
+    }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "mf-sort-detector"
+    ],
+    [
+      "mf-sort-detector",
+      "bbox-painter"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "mf-sort-detector",
+      "bbox-painter"
+    ]
+  },
+  "discover_nodes_from": [
+    "mmlapipe"
+  ]
+}
