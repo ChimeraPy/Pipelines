@@ -59,9 +59,10 @@ class MFSortDetector(cp.Node):
         }
         self.frames_key = frames_key
         self.detector: Optional[Detector] = None
+        self.debug = kwargs.get("debug", False)
         super().__init__(name=name, **kwargs)
 
-    def prep(self) -> None:
+    def setup(self) -> None:
         if self.detector_kwargs["weights"].startswith("http"):
             with tempfile.NamedTemporaryFile(suffix=".pt") as f:
                 self.detector_kwargs["weights"] = self.download_weights(

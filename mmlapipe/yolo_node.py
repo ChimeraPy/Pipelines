@@ -114,7 +114,7 @@ class YOLONode(cp.Node):
 
         super().__init__(name=name, debug=debug)
 
-    def prep(self):
+    def setup(self):
         # Create the YOLOv5 model
         import torch
 

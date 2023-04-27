@@ -58,7 +58,7 @@ class MFSortTracker(cp.Node):
         self.tracker: Optional[MF_SORT] = None
         super().__init__(name=name, **kwargs)
 
-    def prep(self) -> None:
+    def setup(self) -> None:
         self.tracker = MF_SORT(**self.tracker_kwargs)
         self.COLORS = np.random.randint(
             0, 255, size=(200, 3), dtype="int"
