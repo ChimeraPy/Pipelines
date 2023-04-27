@@ -59,9 +59,10 @@ class Video(cp.Node):
         self.frame_key = frame_key
         self.cp: Optional[cv2.VideoCapture] = None
         self.frame_count = 0
+        self.debug = kwargs.get("debug", False)
         super().__init__(name=name, **kwargs)
 
-    def prep(self) -> None:
+    def setup(self) -> None:
         self.cp = cv2.VideoCapture(self.video_src)
         self.frame_count = 0
 

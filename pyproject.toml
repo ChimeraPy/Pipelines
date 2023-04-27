@@ -13,7 +13,7 @@ classifiers = [
 ]
 
 dependencies = [
-    'chimerapy',
+    'chimerapy @ git+https://github.com/oele-isis-vanderbilt/ChimeraPy@main#egg=chimerapy',
     'numpy',
     'imutils',
     'opencv-python',

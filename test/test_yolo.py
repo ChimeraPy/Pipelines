@@ -27,7 +27,7 @@ def test_yolo_main(color_cap):
     yolo = mmlapipe.YOLONode(name="yolo", debug="step", classes=['person'])
 
     yolo.logger = yolo.get_logger()
-    yolo.prep()
+    yolo.setup()
     for i in range(50):
 
         # Simulate input feed frame
@@ -45,7 +45,7 @@ def test_yolo_main_multiple_inputs(color_cap):
     yolo = mmlapipe.YOLONode(name="yolo", debug="step", classes=['person'])
 
     yolo.logger = yolo.get_logger()
-    yolo.prep()
+    yolo.setup()
     for i in range(50):
 
         # Simulate input feed frame
