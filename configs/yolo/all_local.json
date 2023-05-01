@@ -21,7 +21,8 @@
         "height": 480,
         "frame_key": "frame",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_Video",
@@ -32,7 +33,8 @@
         "height": 480,
         "frame_key": "frame",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_Video",
@@ -43,7 +45,8 @@
         "height": 480,
         "frame_key": "frame",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_Video",
@@ -54,7 +57,8 @@
         "height": 480,
         "frame_key": "frame",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "YOLONode",
@@ -65,14 +69,16 @@
         ],
         "per_row_display": 2,
         "debug": null
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_ShowWindows",
       "name": "tiled",
       "kwargs": {
         "frames_key": "tiled"
-      }
+      },
+      "package": "mmlapipe"
     }
   ],
   "adj": [
@@ -111,9 +117,6 @@
       "tiled"
     ]
   },
-  "discover_nodes_from": [
-    "mmlapipe"
-  ],
   "timeouts": {
     "commit_timeout": 120,
     "shutdown_timeout": 300

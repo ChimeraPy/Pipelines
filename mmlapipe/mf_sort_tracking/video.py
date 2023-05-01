@@ -2,7 +2,7 @@ import chimerapy as cp
 from chimerapy_orchestrator import source_node
 
 from mmlapipe.generic_nodes.video_nodes import Video
-from mmlapipe.mf_sort.data import MFSortFrame
+from mmlapipe.mf_sort_tracking.data import MFSortFrame
 
 
 @source_node(name="MMLAPIPE_MFSortVideo")
