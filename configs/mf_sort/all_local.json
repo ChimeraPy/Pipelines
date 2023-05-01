@@ -22,7 +22,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortVideo",
@@ -34,7 +35,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortVideo",
@@ -46,7 +48,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortVideo",
@@ -58,7 +61,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortDetector",
@@ -67,14 +71,16 @@
         "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
         "device": "cuda",
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_BBoxPainter",
       "name": "bbox-painter-1",
       "kwargs": {
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortTracker",
@@ -82,7 +88,8 @@
       "kwargs": {
         "source_key": "test-1",
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortTracker",
@@ -90,7 +97,8 @@
       "kwargs": {
         "source_key": "test-2",
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortTracker",
@@ -98,7 +106,8 @@
       "kwargs": {
         "source_key": "test-3",
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortTracker",
@@ -106,7 +115,8 @@
       "kwargs": {
         "source_key": "test-4",
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     }
   ],
   "adj": [
@@ -177,9 +187,6 @@
       "mf-sort-tracker-4"
     ]
   },
-  "discover_nodes_from": [
-    "mmlapipe"
-  ],
   "timeouts": {
     "commit_timeout": 240,
     "shutdown_timeout": 300

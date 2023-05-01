@@ -1,10 +1,10 @@
-from typing import Literal
 import pathlib
 import time
-import imutils
+from typing import Literal
 
 import chimerapy as cp
 import cv2
+import imutils
 
 
 class KinectNode(cp.Node):

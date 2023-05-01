@@ -55,6 +55,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["."]
 
+
+[project.entry-points."chimerapy_orchestrator.nodes_registry"]
+get_nodes_registry = "mmlapipe:register_nodes_metadata"
+
 # Reference:
 # https://stackoverflow.com/questions/4673373/logging-within-pytest-tests
 [tool.pytest.ini_options]

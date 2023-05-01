@@ -1,22 +1,23 @@
 import tempfile
+import typing
 from typing import Dict, List, Literal, Optional
+
+if typing.TYPE_CHECKING:
+    from mf_sort.detector import Detector
 
 import chimerapy as cp
 import cv2
 import numpy as np
 import requests
 from chimerapy_orchestrator import step_node
-from mf_sort.detector import Detector
 from tqdm import tqdm
 
-from mmlapipe.mf_sort.data import MFSortFrame, MFSortTrackedDetections
-from mmlapipe.utils import requires_packages
+from mmlapipe.mf_sort_tracking.data import MFSortFrame, MFSortTrackedDetections
 
 
 @step_node(name="MMLAPIPE_MFSortDetector")
-@requires_packages("mf_sort", "requests")
 class MFSortDetector(cp.Node):
-    """A node that uses Yolo model from mf_sort package to detect objects in a video stream.
+    """A node that uses Yolo model from mf_sort_tracking package to detect objects in a video stream.
 
     Parameters
     ----------
@@ -58,11 +59,13 @@ class MFSortDetector(cp.Node):
             "iou_thresh": iou_thresh,
         }
         self.frames_key = frames_key
-        self.detector: Optional[Detector] = None
+        self.detector: Optional["Detector"] = None
         self.debug = kwargs.get("debug", False)
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        from mf_sort.detector import Detector
+
         if self.detector_kwargs["weights"].startswith("http"):
             with tempfile.NamedTemporaryFile(suffix=".pt") as f:
                 self.detector_kwargs["weights"] = self.download_weights(

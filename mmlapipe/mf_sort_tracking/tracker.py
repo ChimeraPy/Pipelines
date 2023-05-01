@@ -1,17 +1,17 @@
-from typing import Dict, List, Optional
+import typing
+from typing import Dict, List, Optional, Type
+
+if typing.TYPE_CHECKING:
+    from mf_sort import MF_SORT, Detection
 
 import chimerapy as cp
 import numpy as np
 from chimerapy_orchestrator import step_node
-from mf_sort import MF_SORT
-from mf_sort.detection import Detection
 
-from mmlapipe.mf_sort.data import MFSortFrame, MFSortTrackedDetections
-from mmlapipe.utils import requires_packages
+from mmlapipe.mf_sort_tracking.data import MFSortFrame, MFSortTrackedDetections
 
 
 @step_node(name="MMLAPIPE_MFSortTracker")
-@requires_packages("mf_sort")
 class MFSortTracker(cp.Node):
     """A node that uses MF_SORT tracker to track objects in a video stream.
 
@@ -55,10 +55,14 @@ class MFSortTracker(cp.Node):
         self.source_key = source_key
         self.frames_key = frames_key
 
-        self.tracker: Optional[MF_SORT] = None
+        self.tracker: Optional["MF_SORT"] = None
+        self.Detection: Optional[Type["Detection"]] = None
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        from mf_sort import MF_SORT, Detection
+
+        self.Detection = Detection
         self.tracker = MF_SORT(**self.tracker_kwargs)
         self.COLORS = np.random.randint(
             0, 255, size=(200, 3), dtype="int"
@@ -66,7 +70,7 @@ class MFSortTracker(cp.Node):
 
     def _filter_detections(
         self, tracked_detections: List[MFSortTrackedDetections]
-    ) -> List[Detection]:
+    ) -> List["Detection"]:
         filtered_detections = []
 
         for detection in tracked_detections:
@@ -77,7 +81,7 @@ class MFSortTracker(cp.Node):
         return filtered_detections
 
     def _tracker_step(
-        self, detections: List[Detection]
+        self, detections: List["Detection"]
     ) -> List[MFSortTrackedDetections]:
         results = self.tracker.step(detections)
 
@@ -87,7 +91,7 @@ class MFSortTracker(cp.Node):
             if trk_id not in detections_by_track_id:
                 detections_by_track_id[trk_id] = []
 
-            det = Detection(
+            det = self.Detection(
                 np.squeeze(trk.tlwh.copy()),
                 trk.confidence,
                 trk.cls,

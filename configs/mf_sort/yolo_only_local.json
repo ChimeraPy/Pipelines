@@ -22,7 +22,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_MFSortDetector",
@@ -32,14 +33,16 @@
         "device": "cuda",
         "imgsz": 640,
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     },
     {
       "registry_name": "MMLAPIPE_BBoxPainter",
       "name": "bbox-painter",
       "kwargs": {
         "frames_key": "image"
-      }
+      },
+      "package": "mmlapipe"
     }
   ],
   "adj": [
@@ -63,9 +66,6 @@
       "bbox-painter"
     ]
   },
-  "discover_nodes_from": [
-    "mmlapipe"
-  ],
   "timeouts": {
     "commit_timeout": 120,
     "shutdown_timeout": 300

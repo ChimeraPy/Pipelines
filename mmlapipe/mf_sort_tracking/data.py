@@ -1,8 +1,11 @@
+import typing
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
+if typing.TYPE_CHECKING:
+    from mf_sort.detection import Detection
+
 import numpy as np
-from mf_sort import Detection
 
 
 @dataclass
@@ -11,7 +14,7 @@ class MFSortTrackedDetections:
 
     tracker_id: Optional[int] = None
     color: Tuple[int, int, int] = (0, 255, 0)
-    bboxes: List[Detection] = field(default_factory=list)
+    bboxes: List["Detection"] = field(default_factory=list)
 
     def get_text(self) -> Optional[str]:
         if self.tracker_id is not None:

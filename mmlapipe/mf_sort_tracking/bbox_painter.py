@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from chimerapy_orchestrator import step_node
 
-from mmlapipe.mf_sort.data import MFSortFrame
+from mmlapipe.mf_sort_tracking.data import MFSortFrame
 
 
 @step_node(name="MMLAPIPE_BBoxPainter")
