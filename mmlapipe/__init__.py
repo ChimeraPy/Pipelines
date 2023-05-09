@@ -36,11 +36,14 @@ def register_nodes_metadata():
         "nodes": [
             "mmlapipe.generic_nodes.video_nodes:Video",
             "mmlapipe.generic_nodes.video_nodes:ShowWindows",
+            "mmlapipe.generic_nodes.log_reader:LogReader",
             "mmlapipe.mf_sort_tracking.bbox_painter:BBoxPainter",
             "mmlapipe.mf_sort_tracking.detector:MFSortDetector",
             "mmlapipe.mf_sort_tracking.tracker:MFSortTracker",
             "mmlapipe.mf_sort_tracking.video:MFSortVideo",
             "mmlapipe.yolo_node:YOLONode",
+            "mmlapipe.embodied.gaze:GazeL2CSNet"
+            "mmlapipe.embodied.log_processor:GEMSTEPLogProcessor"
         ],
     }
 

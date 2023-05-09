@@ -39,6 +39,10 @@ mfsort = [
     'mf_sort[yolo] @ git+https://github.com/kbvatral/MF-SORT.git@master#egg=mf_sort'
 ]
 
+embodied = [
+    'elp @ git+http://github.com/oele-isis-vanderbilt/EmbodiedLearningProject@main'
+]
+
 [project.urls]
 homepath = "https://github.com/oele-isis-vanderbilt/MMLAPIPE"
 documentation = "https://oele-isis-vanderbilt.github.io/MMLAPIPE/"

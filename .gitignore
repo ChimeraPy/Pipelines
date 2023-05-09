@@ -1,5 +1,6 @@
 # Path specific
 /runs
+/cp-logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
