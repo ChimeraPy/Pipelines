@@ -30,6 +30,8 @@ class Video(cp.Node):
         The key to use for the frame in the data chunk
     include_meta: bool, optional (default: False)
         Whether to include the metadata in the data chunk
+    loop: bool, optional (default: False)
+        Whether to loop the video when it reaches the end
     **kwargs
         Additional keyword arguments to pass to the Node constructor
 
@@ -49,6 +51,7 @@ class Video(cp.Node):
         frame_rate: int = 30,
         frame_key: str = "frame",
         include_meta: bool = False,
+        loop: bool = False,
         **kwargs,
     ) -> None:
         self.video_src = video_src
@@ -60,6 +63,7 @@ class Video(cp.Node):
         self.cp: Optional[cv2.VideoCapture] = None
         self.frame_count = 0
         self.debug = kwargs.get("debug", False)
+        self.loop = loop
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
@@ -71,19 +75,24 @@ class Video(cp.Node):
         ret, frame = self.cp.read()
 
         if not ret:
-            self.logger.error("Could not read frame from video source")
-            h = self.height or 480
-            w = self.width or 640
-            frame = np.zeros((h, w, 3), dtype=np.uint8)
-            cv2.putText(
-                frame,
-                "Read Error",
-                (h // 2, w // 2),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 0, 255),
-                2,
-            )
+            if self.loop:
+                self.logger.info("Restarting video")
+                self.cp.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                ret, frame = self.cp.read()
+            else:
+                self.logger.error("Could not read frame from video source")
+                h = self.height or 480
+                w = self.width or 640
+                frame = np.zeros((h, w, 3), dtype=np.uint8)
+                cv2.putText(
+                    frame,
+                    "Read Error",
+                    (h // 2, w // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    2,
+                )
 
         if self.width or self.height:
             frame = imutils.resize(frame, width=self.width, height=self.height)

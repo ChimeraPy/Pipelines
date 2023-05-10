@@ -27,7 +27,8 @@
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
-        "include_meta": true
+        "include_meta": true,
+        "loop": true
       },
       "package": "mmlapipe"
     },
@@ -40,7 +41,8 @@
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
-        "include_meta": true
+        "include_meta": true,
+        "loop": true
       },
       "package": "mmlapipe"
     },
@@ -53,7 +55,8 @@
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
-        "include_meta": true
+        "include_meta": true,
+        "loop": true
       },
       "package": "mmlapipe"
     },
@@ -66,7 +69,8 @@
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
-        "include_meta": true
+        "include_meta": true,
+        "loop": true
       },
       "package": "mmlapipe"
     },
