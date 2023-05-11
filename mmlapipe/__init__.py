@@ -42,7 +42,7 @@ def register_nodes_metadata():
             "mmlapipe.mf_sort_tracking.tracker:MFSortTracker",
             "mmlapipe.mf_sort_tracking.video:MFSortVideo",
             "mmlapipe.yolo_node:YOLONode",
-            "mmlapipe.embodied.gaze:GazeL2CSNet"
+            "mmlapipe.embodied.gaze:GazeL2CSNet",
             "mmlapipe.embodied.log_processor:GEMSTEPLogProcessor"
         ],
     }

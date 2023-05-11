@@ -40,7 +40,7 @@ mfsort = [
 ]
 
 embodied = [
-    'elp @ git+http://github.com/oele-isis-vanderbilt/EmbodiedLearningProject@main'
+    'elp @ git+http://github.com/oele-isis-vanderbilt/EmbodiedLearningProject@main#egg=elp'
 ]
 
 [project.urls]

@@ -71,18 +71,18 @@ class GazeL2CSNet(cp.Node):
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         from l2cs import render
+
+        frame: np.ndarray = data_chunks['camera'].get(self.frames_key)["value"]
+        results = self.model.step(frame)
+
+        vis = render(frame, results)
+        if self.debug:
+            cv2.imshow('gaze', vis)
+            cv2.waitKey(1)
+        
         ret_chunk = cp.DataChunk()
-        ret_frames = []
-
-        for name, data_chunk in data_chunks.items():
-            self.logger.debug(f"{self}: got from {name}, data={data_chunk}")
-            frame: np.ndarray = data_chunk.get(self.frames_key)["value"]
-            results = self.model.step(frame)
-
-            if self.debug:
-                vis = render(frame, results)
-                cv2.imshow(name, vis)
-                cv2.waitKey(1)
+        ret_chunk.add('frame', vis, 'image')
+        ret_chunk.add('results', results)
 
         return ret_chunk
 

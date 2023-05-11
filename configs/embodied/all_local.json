@@ -14,49 +14,73 @@
   "nodes": [
     {
       "registry_name": "MMLAPIPE_Video",
-      "name": "screen-capture",
-      "kwargs": {
-        "video_src": "data/embodied/STEP-01-Run-Fish-screen.mp4",
-        "width": 500,
-        "height": 480,
-        "frame_key": "frame",
-        "include_meta": true
-      },
-    "package": "mmlapipe"
-    },
-    {
-      "registry_name": "MMLAPIPE_Video",
       "name": "camera",
       "kwargs": {
         "video_src": "data/embodied/STEP-01-Run-Fish-front.mp4",
-        "width": 500,
-        "height": 480,
+        "width": 1280,
+        "height": 720,
         "frame_key": "frame",
         "include_meta": true
       },
     "package": "mmlapipe"
     },
     {
-      "registry_name": "MMLAPIPE_ShowWindows",
-      "name": "show",
+      "registry_name": "MMLAPIPE_GazeL2CSNet",
+      "name": "gaze-l2cs-net",
       "kwargs": {
-        "window_xy": [
-          300,
-          300
-        ],
-        "items_per_row": 2
+        "weights": "https://vanderbilt.box.com/shared/static/3n5m0upd9n87x7lkrusbe0rh5hkvsgp2.pkl",
+        "device": "cpu",
+        "frames_key": "frame"
       },
       "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "screen-capture",
+      "kwargs": {
+        "video_src": "data/embodied/STEP-01-Run-Fish-screen.mp4",
+        "width": 1920,
+        "height": 1080,
+        "frame_key": "frame",
+        "include_meta": true
+      },
+    "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_LogReader",
+      "name": "logs",
+      "kwargs": {
+        "logfile": "data/embodied/fish-only-logs.csv",
+        "data_key": "data",
+        "batch_window_size": 0.25,
+        "timestamp_column": "timestamp",
+        "timestamp_format": "%H:%M:%S:%f",
+        "offset": 518.5
+      },
+    "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_GEMSTEPLogProcessor",
+      "name": "log-processor",
+      "kwargs": {
+        "data_key": "data",
+        "frame_key": "frame"
+      },
+    "package": "mmlapipe"
     }
   ],
   "adj": [
     [
-      "screen-capture",
-      "show"
+      "camera",
+      "gaze-l2cs-net"
     ],
     [
-      "camera",
-      "show"
+      "screen-capture",
+      "log-processor"
+    ],
+    [
+      "logs",
+      "log-processor"
     ]
   ],
   "manager_config": {
@@ -66,8 +90,10 @@
   "mappings": {
     "local": [
       "screen-capture",
-      "show",
-      "camera"
+      "camera",
+      "log-processor",
+      "logs",
+      "gaze-l2cs-net"
     ]
   },
   "timeouts": {

@@ -11,10 +11,10 @@ import chimerapy as cp
 # Internal Imports
 import mmlapipe
 
+# Test Imports
+from .conftest import DATA_DIR
+
 # Constants
-CWD = pathlib.Path(os.path.abspath(__file__)).parent
-GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent
-DATA_DIR = GIT_ROOT/'data'
 TEST_VIDEO_FOLDER = DATA_DIR/'TestData'
 assert TEST_VIDEO_FOLDER.exists()
 

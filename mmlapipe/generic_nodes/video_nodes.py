@@ -1,4 +1,5 @@
 import time
+import datetime
 from typing import Any, Dict, Optional, Tuple, Union
 
 import chimerapy as cp
@@ -59,6 +60,7 @@ class Video(cp.Node):
         self.frame_key = frame_key
         self.cp: Optional[cv2.VideoCapture] = None
         self.frame_count = 0
+        self.sleep_factor = 0.95
         self.debug = kwargs.get("debug", False)
         super().__init__(name=name, **kwargs)
 
@@ -95,7 +97,6 @@ class Video(cp.Node):
             cv2.waitKey(1)
 
         data_chunk.add(self.frame_key, frame, "image")
-        self.frame_count += 1
 
         if self.include_meta:
             data_chunk.add(
@@ -110,7 +111,20 @@ class Video(cp.Node):
                     "belongs_to_video_src": bool(ret),
                 },
             )
-        time.sleep(1 / self.frame_rate)
+
+        # Sleeping
+        if self.frame_count == 0:
+            self.initial = datetime.datetime.now()
+        else:
+            current_datetime = datetime.datetime.now()
+            delta = (current_datetime - self.initial).total_seconds()
+            expected = self.frame_count / self.frame_rate
+            sleep_time = expected - delta
+            time.sleep(max(self.sleep_factor*sleep_time, 0))
+
+        # Update
+        self.frame_count += 1
+            
         return data_chunk
 
     def teardown(self) -> None:

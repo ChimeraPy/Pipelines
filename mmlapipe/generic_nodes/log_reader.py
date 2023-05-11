@@ -23,20 +23,26 @@ class LogReader(cp.Node):
     def __init__(
         self,
         logfile: str,
+        batch_window_size: Union[int, float] = 0.25,
         timestamp_column: str = "timestamp",
         timestamp_format: Optional[str] = None,
         offset: Optional[Union[datetime.datetime, float]] = None,
+        sleep_factor: float = 0.95,
         name: str = "LogReader",
         data_key: str = "data",
         **kwargs,
     ) -> None:
 
         self.logfile = logfile
+        self.batch_window_size = batch_window_size
         self.timestamp_column = timestamp_column
         self.timestamp_format = timestamp_format
         self.offset = offset
         self.data_key = data_key
-        self.row_id: int = 0
+        self.sleep_factor = sleep_factor
+
+        self.first_pass = True
+        self.step_id = 0
         self.debug = False
         super().__init__(name=name, **kwargs)
 
@@ -68,33 +74,41 @@ class LogReader(cp.Node):
             # Apply datetime offset
             elif isinstance(self.offset, datetime.datetime):
                 self.data = self.data[self.data[self.timestamp_column] >= self.offset]
-                self.data[self.timestamp_column] = self.data[self.timestamp_column] - self.offset
+                self.data[self.timestamp_column] = (self.data[self.timestamp_column] - self.offset).dt.total_seconds()
 
-        self.row_id = 0
+        # Make copy of data as a stack
+        self.stack = self.data.copy()
+        
+        self.first_pass = True
+        self.step_id = 0
 
     def step(self) -> cp.DataChunk:
         data_chunk = cp.DataChunk()
 
-        # For first, send ASAP
-        if self.row_id == 0:
-            data_chunk.add(self.data_key, self.data.iloc[self.row_id])
-        else:
-            current_time = self.data[self.timestamp_column].iloc[self.row_id-1]
-            next_time = self.data[self.timestamp_column].iloc[self.row_id]
+        # Get initial time
+        if self.step_id == 0:
+            self.initial = datetime.datetime.now()
+        
+        # Compute the current datetime
+        next_timestamp = (self.step_id + 1) * self.batch_window_size
 
-            # Get delta and sleep that (make sure its in seconds)
-            delta = next_time - current_time
-            if not isinstance(delta, (int, float)):
-                delta = delta.total_seconds()
-            time.sleep(max(delta, 0))
+        # Trim stack
+        stop_id = 0
+        for i, (_, row) in enumerate(self.stack.iterrows()):
+            if row[self.timestamp_column] >= next_timestamp:
+                stop_id = i
+                break
 
-            # Then add chunk and send
-            data_chunk.add(self.data_key, self.data.iloc[self.row_id])
-
+        selected_data = self.stack.iloc[:stop_id]
+        data_chunk.add(self.data_key, selected_data)
+        self.stack = self.stack.iloc[stop_id:]
+ 
+        current_datetime = datetime.datetime.now()
+        delta = (current_datetime - self.initial).total_seconds()
+        sleep_time = max(next_timestamp - delta, 0)
+        time.sleep(sleep_time*self.sleep_factor)
+        
         # Update
-        self.row_id += 1
-
-        if self.debug:
-            self.logger.debug(data_chunk.get(self.data_key)['value'].to_dict())
+        self.step_id += 1
 
         return data_chunk
