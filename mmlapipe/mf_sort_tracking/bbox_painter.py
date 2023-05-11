@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 import chimerapy as cp
 import cv2
@@ -49,7 +49,7 @@ class BBoxPainter(cp.Node):
     ) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), color, thickness)
 
-    def get_thickness(self, t, l, w, h):
+    def get_thickness(self, t, l, w, h) -> int:
         """Returns the thickness of the bounding box such that some region is blurred."""
         if self.cover_region is None:
             return 2
@@ -71,7 +71,15 @@ class BBoxPainter(cp.Node):
                 for det in frame.detections:
                     for bbox in det.bboxes:
                         t, l, w, h = bbox.tlwh.astype(int)
-                        self.bbox_plot(img, t, l, w, h, color=det.color, thickness=self.get_thickness(t, l, w, h))
+                        self.bbox_plot(
+                            img,
+                            t,
+                            l,
+                            w,
+                            h,
+                            color=det.color,
+                            thickness=self.get_thickness(t, l, w, h),
+                        )
 
                         if det.get_text() is not None:
                             cv2.putText(
@@ -85,7 +93,11 @@ class BBoxPainter(cp.Node):
                             )
 
                 if self.video_title_prefix is not None:
-                    self.save_video(name=f"{self.video_title_prefix}_{frame.src_id}", data=img, fps=30)
+                    self.save_video(
+                        name=f"{self.video_title_prefix}_{frame.src_id}",
+                        data=img,
+                        fps=30,
+                    )
 
                 collected_frames.append(frame)
 
