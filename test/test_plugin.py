@@ -1,5 +1,6 @@
-from mmlapipe import register_nodes_metadata
 import importlib
+
+from mmlapipe import register_nodes_metadata
 
 
 def test_importing_nodes():

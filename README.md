@@ -1,5 +1,5 @@
 # MMLAPIPE
-This is a repository of sharable [`ChimeraPy`](https://github.com/oele-isis-vanderbilt/ChimeraPy) pipelines, with various Node implementations and [`ChimeraPyOrchestrator`](https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator) configurations.  
+This is a repository of sharable [`ChimeraPy`](https://github.com/oele-isis-vanderbilt/ChimeraPy) pipelines, with various Node implementations and [`ChimeraPyOrchestrator`](https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator) configurations.
 
 
 ## Installation

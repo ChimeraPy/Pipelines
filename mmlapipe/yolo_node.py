@@ -116,7 +116,9 @@ class YOLONode(cp.Node):
         # Create the YOLOv5 model
         import torch
 
-        self.model = torch.hub.load("ultralytics/yolov5", "yolov5s", trust_repo=True)
+        self.model = torch.hub.load(
+            "ultralytics/yolov5", "yolov5s", trust_repo=True
+        )
 
         # Select only the interested classes
         if self.interested_classes_idx:
@@ -125,7 +127,7 @@ class YOLONode(cp.Node):
     def step(self, data_chunks: Dict[str, cp.DataChunk]):
         # Aggreate all inputs
         imgs = []
-        for name, data_chunk in data_chunks.items():
+        for name, data_chunk in data_chunks.items():  # noqa: B007
             imgs.append(data_chunk.get(self.frames_key)["value"])
 
         # Apply the model
@@ -135,7 +137,7 @@ class YOLONode(cp.Node):
         renders = results.render()
         data_chunk = cp.DataChunk()
 
-        for i, name in enumerate(data_chunks):
+        for i, name in enumerate(data_chunks):  # noqa: B007
             data_chunk.add(f"xyx-{i}", results.pandas().xyxy[i])
             data_chunk.add(f"render-{i}", renders[i], "image")
 

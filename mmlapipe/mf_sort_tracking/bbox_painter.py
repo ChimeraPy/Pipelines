@@ -25,7 +25,7 @@ class BBoxPainter(cp.Node):
     def bbox_plot(
         img: np.ndarray,
         t: int,
-        l: int,
+        l: int,  # noqa: E741
         w: int,
         h: int,
         color: Tuple[int, int, int] = (0, 255, 0),
@@ -36,13 +36,13 @@ class BBoxPainter(cp.Node):
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         ret_chunk = cp.DataChunk()
         collected_frames = []
-        for name, data_chunk in data_chunks.items():
+        for name, data_chunk in data_chunks.items():  # noqa: B007
             frames: List[MFSortFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr
                 for det in frame.detections:
                     for bbox in det.bboxes:
-                        t, l, w, h = bbox.tlwh.astype(int)
+                        t, l, w, h = bbox.tlwh.astype(int)  # noqa: E741
                         self.bbox_plot(img, t, l, w, h, color=det.color)
                         if det.get_text() is not None:
                             cv2.putText(
