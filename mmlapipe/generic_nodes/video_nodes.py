@@ -1,3 +1,5 @@
+import os
+import tempfile
 import time
 from typing import Any, Dict, Optional, Tuple, Union
 
@@ -6,6 +8,8 @@ import cv2
 import imutils
 import numpy as np
 from chimerapy_orchestrator import sink_node, source_node
+
+from mmlapipe.utils import download_file
 
 
 @source_node(name="MMLAPIPE_Video")
@@ -52,6 +56,7 @@ class Video(cp.Node):
         frame_key: str = "frame",
         include_meta: bool = False,
         loop: bool = False,
+        download_video: bool = False,
         **kwargs,
     ) -> None:
         self.video_src = video_src
@@ -63,10 +68,15 @@ class Video(cp.Node):
         self.cp: Optional[cv2.VideoCapture] = None
         self.frame_count = 0
         self.debug = kwargs.get("debug", False)
+        self.download_video = download_video
         self.loop = loop
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        if self.download_video:
+            self.logger.info("Downloading video")
+            self.video_src = self.download_video_from_url(self.video_src)
+
         self.cp = cv2.VideoCapture(self.video_src)
         self.frame_count = 0
 
@@ -77,7 +87,14 @@ class Video(cp.Node):
         if not ret:
             if self.loop:
                 self.logger.info("Restarting video")
-                self.cp.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                if isinstance(self.video_src, str) and self.video_src.startswith(
+                    "http"
+                ):
+                    self.cp.release()
+                    self.cp = cv2.VideoCapture(self.video_src)
+                else:
+                    self.cp.set(cv2.CAP_PROP_POS_FRAMES, 0)
+
                 ret, frame = self.cp.read()
             else:
                 self.logger.error("Could not read frame from video source")
@@ -126,6 +143,13 @@ class Video(cp.Node):
         self.cp.release()
         if self.debug:
             cv2.destroyAllWindows()
+
+    @staticmethod
+    def download_video_from_url(url):
+        dirname = tempfile.mkdtemp()
+        filename = os.path.join(dirname, "video.mp4")
+        fname = download_file(url, filename, chunk_size=1024, desc="Downloading video")
+        return fname
 
 
 @sink_node(name="MMLAPIPE_ShowWindows")
