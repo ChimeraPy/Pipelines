@@ -87,9 +87,9 @@ class Video(cp.Node):
         if not ret:
             if self.loop:
                 self.logger.info("Restarting video")
-                if isinstance(self.video_src, str) and self.video_src.startswith(
-                    "http"
-                ):
+                if isinstance(
+                    self.video_src, str
+                ) and self.video_src.startswith("http"):
                     self.cp.release()
                     self.cp = cv2.VideoCapture(self.video_src)
                 else:
@@ -148,7 +148,9 @@ class Video(cp.Node):
     def download_video_from_url(url):
         dirname = tempfile.mkdtemp()
         filename = os.path.join(dirname, "video.mp4")
-        fname = download_file(url, filename, chunk_size=1024, desc="Downloading video")
+        fname = download_file(
+            url, filename, chunk_size=1024, desc="Downloading video"
+        )
         return fname
 
 
@@ -213,7 +215,9 @@ class ShowWindows(cp.Node):
                 cv2.moveWindow(window_id, x, y)
             cv2.waitKey(1)
 
-    def _get_window_id(self, src_name: str, metadata: Optional[Dict[str, Any]]) -> str:
+    def _get_window_id(
+        self, src_name: str, metadata: Optional[Dict[str, Any]]
+    ) -> str:
         """Get the window id for the window to be shown."""
         window_id = src_name
         if metadata:

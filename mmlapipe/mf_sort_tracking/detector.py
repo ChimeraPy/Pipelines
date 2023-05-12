@@ -89,7 +89,9 @@ class MFSortDetector(cp.Node):
                     frame_count=frame.frame_count,
                     src_id=frame.src_id,
                     detections=[
-                        MFSortTrackedDetections(tracker_id=None, bboxes=detections)
+                        MFSortTrackedDetections(
+                            tracker_id=None, bboxes=detections
+                        )
                     ],
                 )
 
@@ -106,9 +108,13 @@ class MFSortDetector(cp.Node):
         return ret_chunk
 
     @staticmethod
-    def paint(img: np.ndarray, t: int, l: int, w: int, h: int) -> None:
+    def paint(
+        img: np.ndarray, t: int, l: int, w: int, h: int  # noqa: E741
+    ) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), (0, 255, 0), 2)
 
     @staticmethod
     def download_weights(url: str, fname: str) -> str:
-        return download_file(url, fname, chunk_size=1024, desc="Downloading weights")
+        return download_file(
+            url, fname, chunk_size=1024, desc="Downloading weights"
+        )
