@@ -8,11 +8,10 @@ if typing.TYPE_CHECKING:
 import chimerapy as cp
 import cv2
 import numpy as np
-import requests
 from chimerapy_orchestrator import step_node
-from tqdm import tqdm
 
 from mmlapipe.mf_sort_tracking.data import MFSortFrame, MFSortTrackedDetections
+from mmlapipe.utils import download_file
 
 
 @step_node(name="MMLAPIPE_MFSortDetector")
@@ -90,7 +89,9 @@ class MFSortDetector(cp.Node):
                     frame_count=frame.frame_count,
                     src_id=frame.src_id,
                     detections=[
-                        MFSortTrackedDetections(tracker_id=None, bboxes=detections)
+                        MFSortTrackedDetections(
+                            tracker_id=None, bboxes=detections
+                        )
                     ],
                 )
 
@@ -107,23 +108,13 @@ class MFSortDetector(cp.Node):
         return ret_chunk
 
     @staticmethod
-    def paint(img: np.ndarray, t: int, l: int, w: int, h: int) -> None:
+    def paint(
+        img: np.ndarray, t: int, l: int, w: int, h: int  # noqa: E741
+    ) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), (0, 255, 0), 2)
 
     @staticmethod
-    def download_weights(url: str, fname: str, chunk_size=1024) -> str:
-        resp = requests.get(url, stream=True)
-        total = int(resp.headers.get("content-length", 0))
-
-        with open(fname, "wb") as file, tqdm(
-            desc="Downloading weights",
-            total=total,
-            unit="iB",
-            unit_scale=True,
-            unit_divisor=1024,
-        ) as bar:
-            for data in resp.iter_content(chunk_size=chunk_size):
-                size = file.write(data)
-                bar.update(size)
-
-        return fname
+    def download_weights(url: str, fname: str) -> str:
+        return download_file(
+            url, fname, chunk_size=1024, desc="Downloading weights"
+        )

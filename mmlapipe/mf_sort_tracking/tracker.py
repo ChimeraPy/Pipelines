@@ -102,7 +102,9 @@ class MFSortTracker(cp.Node):
         return [
             MFSortTrackedDetections(
                 tracker_id=trk_id,
-                color=tuple(int(i) for i in self.COLORS[trk_id % len(self.COLORS)]),
+                color=tuple(
+                    int(i) for i in self.COLORS[trk_id % len(self.COLORS)]
+                ),
                 bboxes=detections,
             )
             for trk_id, detections in detections_by_track_id.items()
@@ -112,11 +114,13 @@ class MFSortTracker(cp.Node):
         ret_chunk = cp.DataChunk()
         tracked_frames = []
 
-        for name, data_chunk in data_chunks.items():
+        for name, data_chunk in data_chunks.items():  # noqa: B007
             frames: List[MFSortFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 if self.source_key == frame.src_id:
-                    filtered_detections = self._filter_detections(frame.detections)
+                    filtered_detections = self._filter_detections(
+                        frame.detections
+                    )
                     frame_detections = self._tracker_step(filtered_detections)
 
                     tracked_frames.append(

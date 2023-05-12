@@ -55,6 +55,19 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["."]
 
+[tool.ruff]
+ignore = ["E501"]
+select = ["E", "W", "F", "C", "B", "I"]
+ignore-init-module-imports = true
+fixable = ["I001"]  # isort fix only
+extend-exclude = ["run.py"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402", "F401"]
+"mmlapipe/__version__.py" = ["E402"]
+
+
+
 
 [project.entry-points."chimerapy_orchestrator.nodes_registry"]
 get_nodes_registry = "mmlapipe:register_nodes_metadata"
