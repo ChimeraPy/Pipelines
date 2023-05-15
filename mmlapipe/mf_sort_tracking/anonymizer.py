@@ -121,3 +121,5 @@ class Anonymizer(cp.Node):
 
         ret_chunk = cp.DataChunk()
         ret_chunk.add(self.frames_key, collected_frames)
+
+        return ret_chunk
