@@ -1,0 +1,107 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "test-1",
+      "kwargs": {
+        "video_src": "https://vanderbilt.box.com/shared/static/21bbplqwweiw7pqnlvsy7f5kbs7o4944.mp4",
+        "width": 640,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true,
+        "loop": false
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortDetector",
+      "name": "mf-sort-detector",
+      "kwargs": {
+        "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
+        "device": "cuda",
+        "imgsz": 640,
+        "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-1",
+      "kwargs": {
+        "source_key": "test-1",
+        "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_BBoxPainter",
+      "name": "bbox-painter",
+      "kwargs": {
+        "frames_key": "image",
+        "show": false,
+        "draw_boxes": false
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Anonymizer",
+      "name": "anonymizer",
+      "kwargs": {
+        "model_name": "yolov8m-seg",
+        "frames_key": "image",
+        "device": "cuda",
+        "show": true,
+        "alpha": 1.0
+      },
+      "package": "mmlapipe"
+    }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "mf-sort-detector"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-1"
+    ],
+    [
+      "mf-sort-tracker-1",
+      "bbox-painter"
+    ],
+    [
+      "bbox-painter",
+      "anonymizer"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "mf-sort-detector",
+      "mf-sort-tracker-1",
+      "bbox-painter",
+      "anonymizer"
+    ]
+  },
+  "timeouts": {
+    "commit_timeout": 120,
+    "shutdown_timeout": 300
+  }
+}
