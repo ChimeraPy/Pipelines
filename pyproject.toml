@@ -36,7 +36,8 @@ test = [
 ]
 
 mfsort = [
-    'mf_sort[yolo] @ git+https://github.com/kbvatral/MF-SORT.git@master#egg=mf_sort'
+    'mf_sort[yolo] @ git+https://github.com/kbvatral/MF-SORT.git@master#egg=mf_sort',
+    'ultralytics'
 ]
 
 [project.urls]

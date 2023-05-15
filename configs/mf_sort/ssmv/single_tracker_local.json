@@ -14,7 +14,7 @@
   "nodes": [
     {
       "registry_name": "MMLAPIPE_MFSortVideo",
-      "name": "test-1",
+      "name": "oele08-segment",
       "kwargs": {
         "video_src": "https://vanderbilt.box.com/shared/static/21bbplqwweiw7pqnlvsy7f5kbs7o4944.mp4",
         "width": 640,
@@ -22,7 +22,8 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": false
+        "loop": false,
+        "download_video": false
       },
       "package": "mmlapipe"
     },
@@ -41,7 +42,7 @@
       "registry_name": "MMLAPIPE_MFSortTracker",
       "name": "mf-sort-tracker-1",
       "kwargs": {
-        "source_key": "test-1",
+        "source_key": "oele08-segment",
         "frames_key": "image"
       },
       "package": "mmlapipe"
@@ -51,8 +52,9 @@
       "name": "bbox-painter",
       "kwargs": {
         "frames_key": "image",
-        "show": false,
-        "draw_boxes": false
+        "show": true,
+        "draw_boxes": false,
+        "video_title_prefix": "ssmv"
       },
       "package": "mmlapipe"
     },
@@ -63,7 +65,7 @@
         "model_name": "yolov8m-seg",
         "frames_key": "image",
         "device": "cuda",
-        "show": true,
+        "show": false,
         "alpha": 1.0
       },
       "package": "mmlapipe"
@@ -71,7 +73,7 @@
   ],
   "adj": [
     [
-      "test-1",
+      "oele08-segment",
       "mf-sort-detector"
     ],
     [
@@ -80,11 +82,11 @@
     ],
     [
       "mf-sort-tracker-1",
-      "bbox-painter"
+      "anonymizer"
     ],
     [
-      "bbox-painter",
-      "anonymizer"
+      "anonymizer",
+      "bbox-painter"
     ]
   ],
   "manager_config": {
@@ -93,7 +95,7 @@
   },
   "mappings": {
     "local": [
-      "test-1",
+      "oele08-segment",
       "mf-sort-detector",
       "mf-sort-tracker-1",
       "bbox-painter",

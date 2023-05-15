@@ -83,7 +83,7 @@
       "name": "bbox-painter-1",
       "kwargs": {
         "frames_key": "image",
-        "show": false
+        "show": true
       },
       "package": "mmlapipe"
     },
@@ -130,7 +130,7 @@
         "model_name": "yolov8m-seg",
         "frames_key": "image",
         "device": "cuda",
-        "show": true,
+        "show": false,
         "alpha": 1.0
       },
       "package": "mmlapipe"
@@ -171,23 +171,23 @@
     ],
     [
       "mf-sort-tracker-1",
-      "bbox-painter-1"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-2",
-      "bbox-painter-1"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-3",
-      "bbox-painter-1"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-4",
-      "bbox-painter-1"
+      "anonymizer"
     ],
     [
-      "bbox-painter-1",
-      "anonymizer"
+      "anonymizer",
+      "bbox-painter-1"
     ]
   ],
   "manager_config": {
