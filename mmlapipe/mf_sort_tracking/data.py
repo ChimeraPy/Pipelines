@@ -32,6 +32,7 @@ class MFSortFrame:
     frame_count: int
     src_id: str
     detections: List[MFSortTrackedDetections] = field(default_factory=list)
+    all_boxes: List["Detection"] = field(default_factory=list)
 
     def __repr__(self) -> str:
         return f"<Frame from {self.src_id} {self.frame_count}>"

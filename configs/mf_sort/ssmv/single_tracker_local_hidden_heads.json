@@ -14,15 +14,16 @@
   "nodes": [
     {
       "registry_name": "MMLAPIPE_MFSortVideo",
-      "name": "test-1",
+      "name": "oele08-segment",
       "kwargs": {
-        "video_src": "/home/umesh/isis/oele/ssmv-data/OELE08-2022-10-19--11-44-37/segment.mp4",
+        "video_src": "https://vanderbilt.box.com/shared/static/21bbplqwweiw7pqnlvsy7f5kbs7o4944.mp4",
         "width": 640,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": false,
+        "download_video": false
       },
       "package": "mmlapipe"
     },
@@ -30,9 +31,18 @@
       "registry_name": "MMLAPIPE_MFSortDetector",
       "name": "mf-sort-detector",
       "kwargs": {
-        "weights": "weights.pt",
+        "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
         "device": "cuda",
         "imgsz": 640,
+        "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-1",
+      "kwargs": {
+        "source_key": "oele08-segment",
         "frames_key": "image"
       },
       "package": "mmlapipe"
@@ -42,21 +52,27 @@
       "name": "bbox-painter",
       "kwargs": {
         "frames_key": "image",
+        "show": true,
+        "draw_boxes": false,
+        "video_title_prefix": "ssmv",
         "paint_classes": [
           1
-        ],
-        "show": true
+        ]
       },
       "package": "mmlapipe"
     }
   ],
   "adj": [
     [
-      "test-1",
+      "oele08-segment",
       "mf-sort-detector"
     ],
     [
       "mf-sort-detector",
+      "mf-sort-tracker-1"
+    ],
+    [
+      "mf-sort-tracker-1",
       "bbox-painter"
     ]
   ],
@@ -66,8 +82,9 @@
   },
   "mappings": {
     "local": [
-      "test-1",
+      "oele08-segment",
       "mf-sort-detector",
+      "mf-sort-tracker-1",
       "bbox-painter"
     ]
   },
