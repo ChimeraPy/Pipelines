@@ -129,6 +129,7 @@ class MFSortTracker(cp.Node):
                             frame_count=frame.frame_count,
                             src_id=frame.src_id,
                             detections=frame_detections,
+                            all_boxes=frame.all_boxes,
                         )
                     )
 

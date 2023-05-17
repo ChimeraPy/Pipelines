@@ -19,12 +19,14 @@ class BBoxPainter(cp.Node):
         show: bool = False,
         video_title_prefix: Optional[str] = None,
         name: str = "BBoxPainter",
+        paint_classes: Optional[List[int]] = None,
         **kwargs,
     ) -> None:
         self.frames_key = frames_key
         self.draw_boxes = draw_boxes
         self.show = show
         self.video_title_prefix = video_title_prefix
+        self.paint_classes = paint_classes
         super().__init__(name=name, **kwargs)
 
     @staticmethod
@@ -38,6 +40,27 @@ class BBoxPainter(cp.Node):
         thickness: int = 2,
     ) -> None:
         cv2.rectangle(img, (t, l), ((t + w), (l + h)), color, thickness)
+
+    def _paint_classes(self, frame: MFSortFrame):
+        for bbox in frame.all_boxes:
+            if bbox.cls in self.paint_classes:
+                t, l, w, h = bbox.tlwh.astype(int)  # noqa: E741
+                self.bbox_plot(
+                    frame.arr, t, l, w, h, color=(0, 255, 0), thickness=-1
+                )
+
+    @staticmethod
+    def _put_text(img, t, l, text, color) -> None:  # noqa: E741
+        if text is not None:
+            cv2.putText(
+                img,
+                text,
+                (t, l - 5),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                color,
+                2,
+            )
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         ret_chunk = cp.DataChunk()
@@ -53,16 +76,11 @@ class BBoxPainter(cp.Node):
                         if self.draw_boxes:
                             self.bbox_plot(img, t, l, w, h, color=det.color)
 
-                        if det.get_text() is not None:
-                            cv2.putText(
-                                img,
-                                det.get_text(),
-                                (t, l - 5),
-                                cv2.FONT_HERSHEY_SIMPLEX,
-                                0.5,
-                                det.color,
-                                2,
-                            )
+                        self._put_text(img, t, l, det.get_text(), det.color)
+
+                    if self.paint_classes is not None:
+                        self._paint_classes(frame)
+
                 collected_frames.append(frame)
 
         for frame in collected_frames:

@@ -93,6 +93,7 @@ class MFSortDetector(cp.Node):
                             tracker_id=None, bboxes=detections
                         )
                     ],
+                    all_boxes=detections,
                 )
 
                 if self.debug:
