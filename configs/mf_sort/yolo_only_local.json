@@ -16,7 +16,7 @@
       "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-1",
       "kwargs": {
-        "video_src": "/home/umesh/isis/oele/ssmv-data/OELE08-2022-10-19--11-44-37/segment.mp4",
+        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
         "width": 640,
         "height": null,
         "frame_rate": 30,
@@ -30,7 +30,7 @@
       "registry_name": "MMLAPIPE_MFSortDetector",
       "name": "mf-sort-detector",
       "kwargs": {
-        "weights": "weights.pt",
+        "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
         "device": "cuda",
         "imgsz": 640,
         "frames_key": "image"
