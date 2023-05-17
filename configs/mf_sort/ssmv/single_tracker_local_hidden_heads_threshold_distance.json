@@ -1,0 +1,97 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_MFSortVideo",
+      "name": "oele08-segment",
+      "kwargs": {
+        "video_src": "https://vanderbilt.box.com/shared/static/21bbplqwweiw7pqnlvsy7f5kbs7o4944.mp4",
+        "width": 640,
+        "height": null,
+        "frame_rate": 30,
+        "frame_key": "image",
+        "include_meta": true,
+        "loop": false,
+        "download_video": false
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortDetector",
+      "name": "mf-sort-detector",
+      "kwargs": {
+        "weights": "weights.pt",
+        "device": "cuda",
+        "imgsz": 640,
+        "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_MFSortTracker",
+      "name": "mf-sort-tracker-1",
+      "kwargs": {
+        "source_key": "oele08-segment",
+        "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_BBoxPainter",
+      "name": "bbox-painter",
+      "kwargs": {
+        "frames_key": "image",
+        "show": true,
+        "draw_boxes": false,
+        "video_title_prefix": "ssmv",
+        "paint_classes": [
+          1
+        ],
+        "put_text": true,
+        "threshold_bbox_distance": 50
+      },
+      "package": "mmlapipe"
+    }
+  ],
+  "adj": [
+    [
+      "oele08-segment",
+      "mf-sort-detector"
+    ],
+    [
+      "mf-sort-detector",
+      "mf-sort-tracker-1"
+    ],
+    [
+      "mf-sort-tracker-1",
+      "bbox-painter"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "oele08-segment",
+      "mf-sort-detector",
+      "mf-sort-tracker-1",
+      "bbox-painter"
+    ]
+  },
+  "timeouts": {
+    "commit_timeout": 120,
+    "shutdown_timeout": 300
+  }
+}
