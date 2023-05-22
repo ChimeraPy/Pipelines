@@ -1,3 +1,5 @@
+import os
+import tempfile
 import time
 import datetime
 from typing import Any, Dict, Optional, Tuple, Union
@@ -7,6 +9,8 @@ import cv2
 import imutils
 import numpy as np
 from chimerapy_orchestrator import sink_node, source_node
+
+from mmlapipe.utils import download_file
 
 
 @source_node(name="MMLAPIPE_Video")
@@ -31,6 +35,8 @@ class Video(cp.Node):
         The key to use for the frame in the data chunk
     include_meta: bool, optional (default: False)
         Whether to include the metadata in the data chunk
+    loop: bool, optional (default: False)
+        Whether to loop the video when it reaches the end
     **kwargs
         Additional keyword arguments to pass to the Node constructor
 
@@ -50,6 +56,8 @@ class Video(cp.Node):
         frame_rate: int = 30,
         frame_key: str = "frame",
         include_meta: bool = False,
+        loop: bool = False,
+        download_video: bool = False,
         **kwargs,
     ) -> None:
         self.video_src = video_src
@@ -62,9 +70,15 @@ class Video(cp.Node):
         self.frame_count = 0
         self.sleep_factor = 0.95
         self.debug = kwargs.get("debug", False)
+        self.download_video = download_video
+        self.loop = loop
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        if self.download_video:
+            self.logger.info("Downloading video")
+            self.video_src = self.download_video_from_url(self.video_src)
+
         self.cp = cv2.VideoCapture(self.video_src)
         self.frame_count = 0
 
@@ -73,19 +87,31 @@ class Video(cp.Node):
         ret, frame = self.cp.read()
 
         if not ret:
-            self.logger.error("Could not read frame from video source")
-            h = self.height or 480
-            w = self.width or 640
-            frame = np.zeros((h, w, 3), dtype=np.uint8)
-            cv2.putText(
-                frame,
-                "Read Error",
-                (h // 2, w // 2),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 0, 255),
-                2,
-            )
+            if self.loop:
+                self.logger.info("Restarting video")
+                if isinstance(
+                    self.video_src, str
+                ) and self.video_src.startswith("http"):
+                    self.cp.release()
+                    self.cp = cv2.VideoCapture(self.video_src)
+                else:
+                    self.cp.set(cv2.CAP_PROP_POS_FRAMES, 0)
+
+                ret, frame = self.cp.read()
+            else:
+                self.logger.error("Could not read frame from video source")
+                h = self.height or 480
+                w = self.width or 640
+                frame = np.zeros((h, w, 3), dtype=np.uint8)
+                cv2.putText(
+                    frame,
+                    "Read Error",
+                    (h // 2, w // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    2,
+                )
 
         if self.width or self.height:
             frame = imutils.resize(frame, width=self.width, height=self.height)
@@ -131,6 +157,15 @@ class Video(cp.Node):
         self.cp.release()
         if self.debug:
             cv2.destroyAllWindows()
+
+    @staticmethod
+    def download_video_from_url(url):
+        dirname = tempfile.mkdtemp()
+        filename = os.path.join(dirname, "video.mp4")
+        fname = download_file(
+            url, filename, chunk_size=1024, desc="Downloading video"
+        )
+        return fname
 
 
 @sink_node(name="MMLAPIPE_ShowWindows")
@@ -194,7 +229,9 @@ class ShowWindows(cp.Node):
                 cv2.moveWindow(window_id, x, y)
             cv2.waitKey(1)
 
-    def _get_window_id(self, src_name: str, metadata: Optional[Dict[str, Any]]) -> str:
+    def _get_window_id(
+        self, src_name: str, metadata: Optional[Dict[str, Any]]
+    ) -> str:
         """Get the window id for the window to be shown."""
         window_id = src_name
         if metadata:

@@ -8,12 +8,6 @@
         "name": "local",
         "id": "local",
         "description": "local worker for the MMLA pipeline demo with a video node"
-      },
-      {
-        "name": "worker-1",
-        "id": "worker-1",
-        "description": "worker for the MMLA pipeline demo with a video node",
-        "remote": true
       }
     ]
   },
@@ -28,7 +22,7 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": "true"
       },
       "package": "mmlapipe"
     },
@@ -42,7 +36,7 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": "true"
       },
       "package": "mmlapipe"
     },
@@ -56,7 +50,7 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": "true"
       },
       "package": "mmlapipe"
     },
@@ -70,7 +64,7 @@
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": "true"
       },
       "package": "mmlapipe"
     },
@@ -86,9 +80,10 @@
     },
     {
       "registry_name": "MMLAPIPE_BBoxPainter",
-      "name": "bbox-painter",
+      "name": "bbox-painter-1",
       "kwargs": {
-        "frames_key": "image"
+        "frames_key": "image",
+        "show": true
       },
       "package": "mmlapipe"
     },
@@ -125,6 +120,18 @@
       "kwargs": {
         "source_key": "test-4",
         "frames_key": "image"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Anonymizer",
+      "name": "anonymizer",
+      "kwargs": {
+        "model_name": "yolov8m-seg",
+        "frames_key": "image",
+        "device": "cuda",
+        "show": false,
+        "alpha": 1.0
       },
       "package": "mmlapipe"
     }
@@ -164,19 +171,23 @@
     ],
     [
       "mf-sort-tracker-1",
-      "bbox-painter"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-2",
-      "bbox-painter"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-3",
-      "bbox-painter"
+      "anonymizer"
     ],
     [
       "mf-sort-tracker-4",
-      "bbox-painter"
+      "anonymizer"
+    ],
+    [
+      "anonymizer",
+      "bbox-painter-1"
     ]
   ],
   "manager_config": {
@@ -190,17 +201,16 @@
       "test-3",
       "test-4",
       "mf-sort-detector",
-      "bbox-painter"
-    ],
-    "worker-1": [
+      "bbox-painter-1",
       "mf-sort-tracker-1",
       "mf-sort-tracker-2",
       "mf-sort-tracker-3",
-      "mf-sort-tracker-4"
+      "mf-sort-tracker-4",
+      "anonymizer"
     ]
   },
   "timeouts": {
-    "commit_timeout": 120,
+    "commit_timeout": 240,
     "shutdown_timeout": 300
   }
 }

@@ -16,13 +16,14 @@
       "registry_name": "MMLAPIPE_MFSortVideo",
       "name": "test-1",
       "kwargs": {
-        "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
+        "video_src": "https://vanderbilt.box.com/shared/static/e1pyopk5ynxyj7ehusscfx9883sngslb.mp4",
         "width": 640,
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
         "include_meta": true,
-        "loop": true
+        "loop": true,
+        "download_video": true
       },
       "package": "mmlapipe"
     },

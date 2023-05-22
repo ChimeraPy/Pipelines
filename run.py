@@ -1,9 +1,10 @@
-import pathlib
 import os
+import pathlib
 import sys
 
 # Third-party Imports
 import chimerapy as cp
+
 cp.debug([])
 
 # Internal Imports
@@ -11,9 +12,10 @@ import mmlapipe
 
 # Constant
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent
-DATA_DIR = GIT_ROOT/'data'
-VIDEO_FOLDER = DATA_DIR/'TestData'
+DATA_DIR = GIT_ROOT / "data"
+VIDEO_FOLDER = DATA_DIR / "TestData"
 assert VIDEO_FOLDER.exists()
+
 
 def show_video(manager: cp.Manager):
 
@@ -24,18 +26,19 @@ def show_video(manager: cp.Manager):
         graph.add_node(node)
         node_ids.append(node.id)
 
-    mapping = {'local': node_ids}
+    mapping = {"local": node_ids}
     manager.commit_graph(
         graph=graph,
         mapping=mapping,
-        send_packages=[{"name": "mmlapipe", "path": GIT_ROOT/"mmlapipe"}]
+        send_packages=[{"name": "mmlapipe", "path": GIT_ROOT / "mmlapipe"}],
     )
+
 
 def yolo_pipeline(manager: cp.Manager):
 
     graph = cp.Graph()
     node_ids = []
-    yolo_node = mmlapipe.YOLONode(name="yolo", classes=['person'])
+    yolo_node = mmlapipe.YOLONode(name="yolo", classes=["person"])
     graph.add_node(yolo_node)
     node_ids.append(yolo_node.id)
 
@@ -47,17 +50,18 @@ def yolo_pipeline(manager: cp.Manager):
         graph.add_edge(node, yolo_node)
         node_ids.append(node.id)
 
-    mapping = {'local': node_ids}
+    mapping = {"local": node_ids}
     manager.commit_graph(
         graph=graph,
         mapping=mapping,
-        send_packages=[{"name": "mmlapipe", "path": GIT_ROOT/"mmlapipe"}]
+        send_packages=[{"name": "mmlapipe", "path": GIT_ROOT / "mmlapipe"}],
     )
+
 
 if __name__ == "__main__":
 
     # Create default manager and desired graph
-    manager = cp.Manager(logdir=GIT_ROOT/"runs", port=0)
+    manager = cp.Manager(logdir=GIT_ROOT / "runs", port=0)
     worker = cp.Worker(name="local", id="local")
     worker.connect(host=manager.host, port=manager.port)
 
@@ -66,7 +70,7 @@ if __name__ == "__main__":
         q = input("All workers connected? (Y/n)")
         if q.lower() == "y":
             break
-        elif q.lower() == 'q':
+        elif q.lower() == "q":
             manager.shutdown()
             worker.shutdown()
             sys.exit(0)
@@ -86,7 +90,7 @@ if __name__ == "__main__":
         q = input("Ready to start? (Y/n)")
         if q.lower() == "y":
             break
-        elif q.lower() == 'q':
+        elif q.lower() == "q":
             manager.shutdown()
             worker.shutdown()
             sys.exit(0)

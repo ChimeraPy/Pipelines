@@ -21,7 +21,8 @@
         "height": null,
         "frame_rate": 30,
         "frame_key": "image",
-        "include_meta": true
+        "include_meta": true,
+        "loop": true
       },
       "package": "mmlapipe"
     },
@@ -40,7 +41,11 @@
       "registry_name": "MMLAPIPE_BBoxPainter",
       "name": "bbox-painter",
       "kwargs": {
-        "frames_key": "image"
+        "frames_key": "image",
+        "paint_classes": [
+          1
+        ],
+        "show": true
       },
       "package": "mmlapipe"
     }
