@@ -36,6 +36,7 @@ def register_nodes_metadata():
         "nodes": [
             "mmlapipe.generic_nodes.video_nodes:Video",
             "mmlapipe.generic_nodes.video_nodes:ShowWindows",
+            "mmlapipe.generic_nodes.screen_capture:ScreenCapture",
             "mmlapipe.mf_sort_tracking.bbox_painter:BBoxPainter",
             "mmlapipe.mf_sort_tracking.detector:MFSortDetector",
             "mmlapipe.mf_sort_tracking.tracker:MFSortTracker",
