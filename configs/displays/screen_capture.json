@@ -1,0 +1,42 @@
+{
+    "mode": "record",
+    "workers": {
+      "manager_ip": "129.59.104.153",
+      "manager_port": 9001,
+      "instances": [
+        {
+          "name": "local",
+          "id": "local",
+          "description": "local worker for the MMLA pipeline demo with a video node"
+        }
+      ]
+    },
+    "nodes": [
+      {
+        "registry_name": "MMLAPIPE_ScreenCapture",
+        "name": "screen-capture",
+        "kwargs": {
+            "scale": 0.25
+        },
+        "package": "mmlapipe"
+    }, {
+        "registry_name": "MMLAPIPE_ShowWindows",
+        "name": "show",
+        "kwargs": {},
+        "package": "mmlapipe"
+    }
+    ],
+    "adj": [
+        ["screen-capture", "show"]
+    ],
+    "manager_config": {
+      "logdir": "cp-logs",
+      "port": 9001
+    },
+    "mappings": {
+      "local": [
+        "screen-capture",
+        "show"
+    ]
+    }
+  }
