@@ -37,6 +37,7 @@ def register_nodes_metadata():
             "mmlapipe.generic_nodes.video_nodes:Video",
             "mmlapipe.generic_nodes.video_nodes:ShowWindows",
             "mmlapipe.generic_nodes.log_reader:LogReader",
+            "mmlapipe.generic_nodes.screen_capture:ScreenCapture",
             "mmlapipe.mf_sort_tracking.bbox_painter:BBoxPainter",
             "mmlapipe.mf_sort_tracking.detector:MFSortDetector",
             "mmlapipe.mf_sort_tracking.tracker:MFSortTracker",
@@ -44,7 +45,7 @@ def register_nodes_metadata():
             "mmlapipe.mf_sort_tracking.anonymizer:Anonymizer",
             "mmlapipe.yolo_node:YOLONode",
             "mmlapipe.embodied.gaze:GazeL2CSNet",
-            "mmlapipe.embodied.log_processor:GEMSTEPLogProcessor"
+            "mmlapipe.embodied.log_processor:GEMSTEPLogProcessor",
         ],
     }
 

@@ -23,6 +23,7 @@ dependencies = [
     'torchvision',
     'seaborn',
     'requests',
+    'mss',
     'chimerapy-orchestrator @ git+https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator@main#egg=chimerapy_orchestrator',
 ]
 
