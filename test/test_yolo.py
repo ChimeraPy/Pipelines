@@ -10,6 +10,9 @@ import pytest
 # Internal Imports
 import mmlapipe
 
+# Test Imports
+from .conftest import DATA_DIR
+
 # Constants
 CWD = pathlib.Path(os.path.abspath(__file__)).parent
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent

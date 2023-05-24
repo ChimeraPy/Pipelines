@@ -41,6 +41,11 @@ mfsort = [
     'ultralytics'
 ]
 
+embodied = [
+    'elp @ git+http://github.com/oele-isis-vanderbilt/EmbodiedLearningProject@main#egg=elp',
+    'l2cs @ git+https://github.com/edavalosanaya/L2CS-Net.git@main#egg=l2cs'
+]
+
 [project.urls]
 homepath = "https://github.com/oele-isis-vanderbilt/MMLAPIPE"
 documentation = "https://oele-isis-vanderbilt.github.io/MMLAPIPE/"
