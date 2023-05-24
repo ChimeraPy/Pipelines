@@ -16,11 +16,12 @@
       "registry_name": "MMLAPIPE_Video",
       "name": "screen-capture",
       "kwargs": {
-        "video_src": "data/embodied/STEP-01-Run-Fish-screen.mp4",
+        "video_src": "https://vanderbilt.box.com/shared/static/5stwbljk2jfliyst7886oa11w7moi9or.mp4",
         "width": 1920,
         "height": 1080,
         "frame_key": "frame",
-        "include_meta": true
+        "include_meta": true,
+        "download_video": true
       },
     "package": "mmlapipe"
     },
@@ -28,7 +29,7 @@
       "registry_name": "MMLAPIPE_LogReader",
       "name": "logs",
       "kwargs": {
-        "logfile": "data/embodied/fish-only-logs.csv",
+        "logfile": "https://vanderbilt.box.com/shared/static/vomwckyroqygmcrkjoezi82hyt5olukx.csv",
         "data_key": "data",
         "batch_window_size": 0.25,
         "timestamp_column": "timestamp",
@@ -42,7 +43,8 @@
       "name": "log-processor",
       "kwargs": {
         "data_key": "data",
-        "frame_key": "frame"
+        "frame_key": "frame",
+        "show": true
       },
     "package": "mmlapipe"
     }

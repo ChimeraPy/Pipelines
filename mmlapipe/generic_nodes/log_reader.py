@@ -1,10 +1,14 @@
+import datetime
+import tempfile
+import time
 from typing import Optional, Union
 
-import time
-import datetime
-import pandas as pd
 import chimerapy as cp
+import pandas as pd
 from chimerapy_orchestrator import source_node
+
+from mmlapipe.utils import download_file
+
 
 @source_node(name="MMLAPIPE_LogReader")
 class LogReader(cp.Node):
@@ -48,39 +52,64 @@ class LogReader(cp.Node):
 
     def setup(self) -> None:
 
-        # Read file
-        if self.logfile.endswith('.csv'):
-            self.data = pd.read_csv(self.logfile)
-        elif self.logfile.endswith('.xlsx'):
-            self.data = pd.read_excel(self.logfile)
+        if self.logfile.startswith("http"):
+            suffix = self.logfile.split(".")[-1]
+            with tempfile.NamedTemporaryFile(suffix=f".{suffix}") as f:
+                self.logfile = download_file(self.logfile, f.name)
+                self._read_logfile()
         else:
-            raise NotImplementedError(f"{self.logfile}, file not supported by LogReader")
+            self._read_logfile()
 
         # Convert string timestamps to datetime objects
         if self.timestamp_format:
-            self.data[self.timestamp_column] = pd.to_datetime(self.data[self.timestamp_column], format=self.timestamp_format)
+            self.data[self.timestamp_column] = pd.to_datetime(
+                self.data[self.timestamp_column], format=self.timestamp_format
+            )
         else:
-            self.data[self.timestamp_column] = pd.to_datetime(self.data[self.timestamp_column])
+            self.data[self.timestamp_column] = pd.to_datetime(
+                self.data[self.timestamp_column]
+            )
 
         # Apply offset if requested
         if type(self.offset) != type(None):
-           
+
             # Apply second type offset
             if isinstance(self.offset, (float, int)):
-                self.data[self.timestamp_column] = (self.data[self.timestamp_column] - self.data[self.timestamp_column][0]).dt.total_seconds()
-                self.data = self.data[self.data[self.timestamp_column] >= self.offset]
-                self.data[self.timestamp_column] = self.data[self.timestamp_column] - self.offset
+                self.data[self.timestamp_column] = (
+                    self.data[self.timestamp_column]
+                    - self.data[self.timestamp_column][0]
+                ).dt.total_seconds()
+                self.data = self.data[
+                    self.data[self.timestamp_column] >= self.offset
+                ]
+                self.data[self.timestamp_column] = (
+                    self.data[self.timestamp_column] - self.offset
+                )
 
             # Apply datetime offset
             elif isinstance(self.offset, datetime.datetime):
-                self.data = self.data[self.data[self.timestamp_column] >= self.offset]
-                self.data[self.timestamp_column] = (self.data[self.timestamp_column] - self.offset).dt.total_seconds()
+                self.data = self.data[
+                    self.data[self.timestamp_column] >= self.offset
+                ]
+                self.data[self.timestamp_column] = (
+                    self.data[self.timestamp_column] - self.offset
+                ).dt.total_seconds()
 
         # Make copy of data as a stack
         self.stack = self.data.copy()
-        
+
         self.first_pass = True
         self.step_id = 0
+
+    def _read_logfile(self):
+        if self.logfile.endswith(".csv"):
+            self.data = pd.read_csv(self.logfile)
+        elif self.logfile.endswith(".xlsx"):
+            self.data = pd.read_excel(self.logfile)
+        else:
+            raise NotImplementedError(
+                f"{self.logfile}, file not supported by LogReader"
+            )
 
     def step(self) -> cp.DataChunk:
         data_chunk = cp.DataChunk()
@@ -88,7 +117,7 @@ class LogReader(cp.Node):
         # Get initial time
         if self.step_id == 0:
             self.initial = datetime.datetime.now()
-        
+
         # Compute the current datetime
         next_timestamp = (self.step_id + 1) * self.batch_window_size
 
@@ -102,13 +131,19 @@ class LogReader(cp.Node):
         selected_data = self.stack.iloc[:stop_id]
         data_chunk.add(self.data_key, selected_data)
         self.stack = self.stack.iloc[stop_id:]
- 
+
         current_datetime = datetime.datetime.now()
         delta = (current_datetime - self.initial).total_seconds()
         sleep_time = max(next_timestamp - delta, 0)
-        time.sleep(sleep_time*self.sleep_factor)
-        
+        time.sleep(sleep_time * self.sleep_factor)
+
         # Update
         self.step_id += 1
 
         return data_chunk
+
+    @staticmethod
+    def download_logfile(url: str, fname: str) -> str:
+        return download_file(
+            url, fname, chunk_size=1024, desc="Downloading weights"
+        )

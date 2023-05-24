@@ -16,11 +16,11 @@
       "registry_name": "MMLAPIPE_Video",
       "name": "camera",
       "kwargs": {
-        "video_src": "data/embodied/STEP-01-Run-Fish-front.mp4",
+        "video_src": "https://vanderbilt.box.com/shared/static/pn2usc5wdfjp1azx37dxz2h3ba85sicw.mp4",
         "width": 1280,
-        "height": 720,
         "frame_key": "frame",
-        "include_meta": true
+        "include_meta": true,
+        "download_video": true
       },
     "package": "mmlapipe"
     },
@@ -29,8 +29,9 @@
       "name": "gaze-l2cs-net",
       "kwargs": {
         "weights": "https://vanderbilt.box.com/shared/static/3n5m0upd9n87x7lkrusbe0rh5hkvsgp2.pkl",
-        "device": "cpu",
-        "frames_key": "frame"
+        "device": "cuda",
+        "frames_key": "frame",
+        "show": true
       },
       "package": "mmlapipe"
     }
