@@ -77,8 +77,16 @@ class GazeL2CSNet(cp.Node):
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
         frame: np.ndarray = data_chunks["camera"].get(self.frames_key)["value"]
-        results = self.model.step(frame)
-        vis = self.render(frame, results)
+
+        try:
+            results = self.model.step(frame)
+            vis = self.render(frame, results)
+
+        except Exception as e:
+            self.logger.error(e)
+            vis = frame
+            results = None
+
         if self.show:
             cv2.imshow("gaze", vis)
             cv2.waitKey(1)
