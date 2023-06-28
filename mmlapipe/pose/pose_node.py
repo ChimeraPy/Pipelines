@@ -85,7 +85,6 @@ class PoseNode(cp.Node):
 
         # Apply the model
         results = self.model(imgs, device=self.device)
-        print(type(results[0]), flush = True)
 
         # Get the rendered image
         renders = [x.plot() for x in results]

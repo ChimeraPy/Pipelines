@@ -32,7 +32,7 @@ class MultiPoseNode(cp.Node):
         "" - detection
         "-pose" - pose estimation
         "-seg" - segmentation
-        "-cls" - classification
+        "-cls" - classification (not fully supported yet)
 
     scale: str, optional (default: 'n')
         The scale of the model. Choice: n, s, m, l, x

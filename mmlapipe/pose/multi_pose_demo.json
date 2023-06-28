@@ -20,7 +20,7 @@
         "width": 640,
         "height": 480,
         "frame_key": "frame",
-        "frame_rate": 30,
+        "frame_rate": 60,
         "include_meta": true
       },
       "package": "mmlapipe"
@@ -41,6 +41,34 @@
       "package": "mmlapipe"
     },
     {
+      "registry_name": "YOLOVideo",
+      "name": "vid2",
+      "kwargs": {
+        "video_src": "https://cdn.videvo.net/videvo_files/video/free/2023-02/large_watermarked/221026_02_Dancer_4k_042_preview.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "frame_rate": 30,
+        "include_meta": true,
+        "loop": true
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "YOLOVideo",
+      "name": "vid3",
+      "kwargs": {
+        "video_src": "https://joy1.videvo.net/videvo_files/video/free/video0482/large_watermarked/_import_62bbefe51f3547.77164811_preview.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "frame_rate": 30,
+        "include_meta": true,
+        "loop": true
+      },
+      "package": "mmlapipe"
+    },
+    {
       "registry_name": "MultiPoseNode",
       "name": "pose",
       "kwargs": {
@@ -56,9 +84,7 @@
       "kwargs": {
         "source_key": "vid",
         "filename": "testing",
-        "file_format": [
-          "vid"
-        ]
+        "file_format": "df"
       },
       "package": "mmlapipe"
     },
@@ -68,9 +94,27 @@
       "kwargs": {
         "source_key": "vid1",
         "filename": "testing",
-        "file_format": [
-          "df"
-        ]
+        "file_format": "vid"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MultiSaveNode",
+      "name": "save3",
+      "kwargs": {
+        "source_key": "vid3",
+        "filename": "testing",
+        "file_format": "df"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MultiSaveNode",
+      "name": "save2",
+      "kwargs": {
+        "source_key": "vid2",
+        "filename": "testing",
+        "file_format": "vid"
       },
       "package": "mmlapipe"
     },
@@ -93,12 +137,28 @@
       "pose"
     ],
     [
+      "vid2",
+      "pose"
+    ],
+    [
+      "vid3",
+      "pose"
+    ],
+    [
       "pose",
       "save"
     ],
     [
       "pose",
       "save1"
+    ],
+    [
+      "pose",
+      "save2"
+    ],
+    [
+      "pose",
+      "save3"
     ],
     [
       "pose",
@@ -111,11 +171,15 @@
   },
   "mappings": {
     "local": [
-      "vid",
       "vid1",
       "pose",
       "save",
       "save1",
+      "save2",
+      "save3",
+      "vid",
+      "vid2",
+      "vid3",
       "display"
     ]
   },

@@ -53,7 +53,7 @@ class SaveNode(cp.Node):
         self,
         name: str = "SaveNode",
         filename: str = "yolo_results",
-        file_format: Optional[List[str]] = ["df","video"],
+        file_format: Optional[List[str]] = ["df","vid"],
         fps: int = 30
 
     ) -> None:
@@ -76,10 +76,8 @@ class SaveNode(cp.Node):
                     frames = item.get("tiled")["value"]
                     if frames.size > 0:
                         self.save_video(self.filename, frames, self.fps)
-                        
-                # print(f"{self.format[0]} saved to {self.filename}", flush=True)
     
             else:
-                print("results is None, not in data chunks", flush=True)
+                self.logger.error("YOLO Result is None, not in data chunks")
 
 

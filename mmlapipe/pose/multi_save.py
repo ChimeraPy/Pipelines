@@ -13,7 +13,7 @@ from mmlapipe.pose.data import YOLOFrame
 """
 
 
-def to_dataframe(results, normalize=False):
+def to_dataframe(results, frame_cnt, normalize=False):
     lst = []
     data = results.boxes.data.cpu().tolist()
     h, w = results.orig_shape if normalize else (1, 1)
@@ -22,7 +22,13 @@ def to_dataframe(results, normalize=False):
         conf = row[4]
         id = int(row[5])
         name = results.names[id]
-        result = {"name": name, "class": id, "confidence": conf, "box": box}
+        result = {
+            "frame_count": frame_cnt,
+            "name": name,
+            "class": id,
+            "confidence": conf,
+            "box": box,
+        }
         if results.masks:
             xy = results.masks.xy[i]  # numpy array
             result["segments"] = {
@@ -70,7 +76,7 @@ class MultiSaveNode(cp.Node):
         frames_key: str = "frame",
         name: str = "SaveNode",
         filename: str = "yolo_results",
-        file_format: Optional[List[str]] = ["df", "video"],
+        file_format: str = "df",
         fps: int = 30,
     ) -> None:
         self.source_key = source_key
@@ -81,22 +87,23 @@ class MultiSaveNode(cp.Node):
         super().__init__(name=name)
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> None:
-        for name, data_chunk in data_chunks.items():  # noqa: B007
+        for _, data_chunk in data_chunks.items():
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 if self.source_key == frame.src_id:
-                    if "df" in self.format:
+                    if "df" == self.format:
                         results = frame.result
+                        frame_cnt = frame.frame_count
                         if results:
-                            dfs = [to_dataframe(result) for result in results]
+                            dfs = [
+                                to_dataframe(result, frame_cnt) for result in results
+                            ]
                             df = pd.concat(dfs, ignore_index=True)
                             self.save_tabular(self.filename + "-" + frame.src_id, df)
 
-                    if "vid" in self.format:
+                    elif "vid" == self.format:
                         img = frame.arr
                         if img.size > 0:
                             self.save_video(
                                 self.filename + "-" + frame.src_id, img, self.fps
                             )
-
-                    # print(f"{self.format[0]} saved to {self.filename}", flush=True)
