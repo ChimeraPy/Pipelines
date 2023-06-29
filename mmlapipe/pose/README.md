@@ -5,6 +5,8 @@
 - **multi_vid_pose: MultiPoseNode** -- This node accepts multiple video node and applies specified YOLO model on frames of those videos. Need to specify specific task and scale of the YOLO model. Currently testing with YOLOv8 pose model, but also support segmentation and detection model, classification model is not supported. 
 - **multi_save: MultiSaveNode** -- This node saves results from MultiPoseNode. Need to specify the save format ("df" (csv) or "vid" (mp4)) and the source_key of the video.
 
+\* All functionality only tested on linux...
+
 ## Connection Example
 
 ```mermaid
@@ -20,7 +22,7 @@ graph TD;
 
 
 ## Example Config File
-There is an example config file named "multi_pose_demo.json". That has two separate video node for two video src : webcam and an online video. It also has two separate save node for saving webcam to video mp4 format and online video as df csv format.
+There is an example config file named "multi_pose_demo.json". That has 4 separate video node for 4 video src : webcam and online videos. It also has 4 separate save nodes for saving videos to video mp4 format or as df csv format.
 
 ## Saved Result Example:
 ### Pose Estimation
