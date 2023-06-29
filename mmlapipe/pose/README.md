@@ -1,4 +1,4 @@
-# How to construct a pose estimation pipeline
+# Integrating YOLOv8
 ## Nodes
 - **video: YOLOVideo** -- Similar to the other video nodes, no special configuration needed for it. Directly connect it to MultiPoseNode to use YOLO models on the source video. 
 - **display: DisplayNode** -- This node is used to display the results after applying YOLO on video source, it connects directly to the Pose node and display each video in a separate window with window id matching the video src id
