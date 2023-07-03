@@ -9,10 +9,8 @@ from chimerapy_orchestrator import step_node
 from mmlapipe.pose.data import YOLOFrame
 import os
 
-os.environ["YOLO_VERBOSE"] = "False"
 
-
-# task: pose, seg, cls
+# task: pose, seg
 # scale: n, s, m, l, x
 @step_node
 class MultiPoseNode(cp.Node):
@@ -53,7 +51,7 @@ class MultiPoseNode(cp.Node):
     def __init__(
         self,
         name: str,
-        task: str = "-pose",
+        task: str = "pose",
         scale: str = "n",
         device: Literal["cpu", "cuda"] = "cpu",
         frames_key: str = "frame",
@@ -62,7 +60,6 @@ class MultiPoseNode(cp.Node):
         self.scale = scale
         self.device = device if device == "cpu" else 0
         self.frames_key = frames_key
-
         super().__init__(name=name)
 
     def setup(self):
@@ -70,7 +67,10 @@ class MultiPoseNode(cp.Node):
         from ultralytics import YOLO
 
         # load model according to params
-        self.model = YOLO("yolov8" + self.scale + self.task + ".pt")
+        if self.task:
+            self.model = YOLO(f"yolov8{self.scale}-{self.task}.pt")
+        else:
+            self.model = YOLO(f"yolov8{self.scale}.pt")
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]):
         # Aggregate all inputs
@@ -80,7 +80,8 @@ class MultiPoseNode(cp.Node):
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr
-                result = self.model(img, device=self.device)[0]
+                # disable verbose output
+                result = self.model(img, device=self.device, verbose=False)[0]
                 # pass down both the rendered result image and the numerial results
                 new_frame = YOLOFrame(
                     arr=result.plot(),

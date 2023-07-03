@@ -7,13 +7,12 @@ import numpy as np
 from chimerapy_orchestrator import sink_node
 from mmlapipe.pose.data import YOLOFrame
 
-"""
-    Helper function to save results as pandas df
-    Code adapted from method tojson() from YOLOv8 repo results.py
-"""
-
 
 def to_dataframe(results, frame_cnt, normalize=False):
+    """
+    Helper function to save results as pandas df
+    Code adapted from method tojson() from YOLOv8 repo results.py
+    """
     lst = []
     data = results.boxes.data.cpu().tolist()
     h, w = results.orig_shape if normalize else (1, 1)
@@ -30,7 +29,7 @@ def to_dataframe(results, frame_cnt, normalize=False):
             "box": box,
         }
         if results.masks:
-            xy = results.masks.xy[i]  # numpy array
+            xy = results.masks.xy[i]
             result["segments"] = {
                 "x": (xy[:, 0] / w).tolist(),
                 "y": (xy[:, 1] / h).tolist(),

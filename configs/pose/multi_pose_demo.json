@@ -72,7 +72,7 @@
       "registry_name": "MultiPoseNode",
       "name": "pose",
       "kwargs": {
-        "task": "-pose",
+        "task": "pose",
         "scale": "n",
         "device": "cuda"
       },

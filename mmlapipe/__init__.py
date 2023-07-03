@@ -44,8 +44,6 @@ def register_nodes_metadata():
             "mmlapipe.mf_sort_tracking.video:MFSortVideo",
             "mmlapipe.mf_sort_tracking.anonymizer:Anonymizer",
             "mmlapipe.yolo_node:YOLONode",
-            "mmlapipe.pose.pose_node:PoseNode",
-            "mmlapipe.pose.save_node:SaveNode",
             "mmlapipe.pose.video:YOLOVideo",
             "mmlapipe.pose.multi_vid_pose:MultiPoseNode",
             "mmlapipe.pose.multi_save:MultiSaveNode",
