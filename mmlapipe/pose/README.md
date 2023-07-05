@@ -20,15 +20,14 @@ graph TD;
     YOLOVideo-2-.-MultiSaveNode-2;
 ```
 
-
 ## Example Config File
 There is an example config file named "multi_pose_demo.json". That has 4 separate video node for 4 video src : webcam and online videos. It also has 4 separate save nodes for saving videos to video mp4 format or as df csv format.
 
 ## Saved Result Example:
 ### Pose Estimation
-| frame_count      | name |class| confidence| box | keypoints
+| frame_count      | name |class| confidence| box(x1, y1, x2, y2) | keypoints(x, y, visible)
 | ----------- | ----------- |----------- | ----------- | ----------- | ----------- |
-|153| person| 0 | 0.928| "{'x1': 0.0, 'y1': 42.0, 'x2': 224.0, 'y2': 355.0}"|"{'x': [61.493...], 'y': [125.084...], 'visible': [0.919...]}"|
+|153| person| 0 | 0.928| [195.58 191.6 589.3 479.76]|"[[474.83 498.74 ...][367.76 320.8 ...][0.98147 0.94374 ...]]"|
 
 #### 17 Pose keypoints:
     facial: 
@@ -45,13 +44,12 @@ There is an example config file named "multi_pose_demo.json". That has 4 separat
     - left/right ankle: 15,16
 
 ### Object Detection
-| frame_count      | name |class| confidence| box | 
+| frame_count      | name |class| confidence| box(x1, y1, x2, y2) | 
 | ----------- | ----------- |----------- | ----------- | ----------- | 
-|153| tv| 62 | 0.928| "{'x1': 0.0, 'y1': 42.0, 'x2': 224.0, 'y2': 355.0}"
+|153| tv| 62 | 0.928| [195.58 191.6 589.3 479.76]
 ### Segmentation
-| frame_count      | name |class| confidence| box | segments
+| frame_count      | name |class| confidence| box(x1, y1, x2, y2) | segments(x, y)
 | ----------- | ----------- |----------- | ----------- | ----------- | ----------- |
-|153| person| 0 | 0.928| "{'x1': 0.0, 'y1': 42.0, 'x2': 224.0, 'y2': 355.0}"|"{'x': [61.493...], 'y': [125.084...]}"|
+|153| person| 0 | 0.928| [195.58 191.6 589.3 479.76]|"[[460 459 ...][188 189 ...]]"|
 
 *Segments gives coordinates of points in the segmentation mask
-

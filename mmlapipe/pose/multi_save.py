@@ -17,7 +17,7 @@ def to_dataframe(results, frame_cnt, normalize=False):
     data = results.boxes.data.cpu().tolist()
     h, w = results.orig_shape if normalize else (1, 1)
     for i, row in enumerate(data):
-        box = {"x1": row[0] / w, "y1": row[1] / h, "x2": row[2] / w, "y2": row[3] / h}
+        box = np.array([row[0] / w, row[1] / h, row[2] / w, row[3] / h])
         conf = row[4]
         id = int(row[5])
         name = results.names[id]
@@ -30,19 +30,23 @@ def to_dataframe(results, frame_cnt, normalize=False):
         }
         if results.masks:
             xy = results.masks.xy[i]
-            result["segments"] = {
-                "x": (xy[:, 0] / w).tolist(),
-                "y": (xy[:, 1] / h).tolist(),
-            }
+            result["segments"] = np.array(
+                [
+                    (xy[:, 0] / w).tolist(),
+                    (xy[:, 1] / h).tolist(),
+                ]
+            )
         if results.keypoints is not None:
             x, y, visible = (
                 results.keypoints[i].data[0].cpu().unbind(dim=1)
             )  # torch Tensor
-            result["keypoints"] = {
-                "x": (x / w).tolist(),
-                "y": (y / h).tolist(),
-                "visible": visible.tolist(),
-            }
+            result["keypoints"] = np.array(
+                [
+                    (x / w).tolist(),
+                    (y / h).tolist(),
+                    visible.tolist(),
+                ]
+            )
         lst.append(result)
 
     return pd.DataFrame(lst)

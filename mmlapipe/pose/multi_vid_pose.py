@@ -9,9 +9,90 @@ from chimerapy_orchestrator import step_node
 from mmlapipe.pose.data import YOLOFrame
 import os
 
+COCO_ORIGINAL_NAMES = [
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "airplane",
+    "bus",
+    "train",
+    "truck",
+    "boat",
+    "traffic light",
+    "fire hydrant",
+    "stop sign",
+    "parking meter",
+    "bench",
+    "bird",
+    "cat",
+    "dog",
+    "horse",
+    "sheep",
+    "cow",
+    "elephant",
+    "bear",
+    "zebra",
+    "giraffe",
+    "backpack",
+    "umbrella",
+    "handbag",
+    "tie",
+    "suitcase",
+    "frisbee",
+    "skis",
+    "snowboard",
+    "sports ball",
+    "kite",
+    "baseball bat",
+    "baseball glove",
+    "skateboard",
+    "surfboard",
+    "tennis racket",
+    "bottle",
+    "wine glass",
+    "cup",
+    "fork",
+    "knife",
+    "spoon",
+    "bowl",
+    "banana",
+    "apple",
+    "sandwich",
+    "orange",
+    "broccoli",
+    "carrot",
+    "hot dog",
+    "pizza",
+    "donut",
+    "cake",
+    "chair",
+    "couch",
+    "potted plant",
+    "bed",
+    "dining table",
+    "toilet",
+    "tv",
+    "laptop",
+    "mouse",
+    "remote",
+    "keyboard",
+    "cell phone",
+    "microwave",
+    "oven",
+    "toaster",
+    "sink",
+    "refrigerator",
+    "book",
+    "clock",
+    "vase",
+    "scissors",
+    "teddy bear",
+    "hair drier",
+    "toothbrush",
+]
 
-# task: pose, seg
-# scale: n, s, m, l, x
+
 @step_node
 class MultiPoseNode(cp.Node):
 
@@ -25,12 +106,12 @@ class MultiPoseNode(cp.Node):
     per_row_display: int, optional (default: 1)
         The number of videos to display per row.
 
-    task: str, optional (default: '-pose')
+    task: str, optional (default: 'pose')
         The type of task to perform. (dash to satisfy the model name)
         "" - detection
-        "-pose" - pose estimation
-        "-seg" - segmentation
-        "-cls" - classification (not fully supported yet)
+        "pose" - pose estimation
+        "seg" - segmentation
+        "cls" - classification (not fully supported yet)
 
     scale: str, optional (default: 'n')
         The scale of the model. Choice: n, s, m, l, x
@@ -46,6 +127,9 @@ class MultiPoseNode(cp.Node):
 
     frames_key: str, optional (default: 'frame')
         The key to access the frames in the video.
+
+    classes: list, optional (default: ['person'])
+        The classes to be detected by the model.
     """
 
     def __init__(
@@ -55,11 +139,19 @@ class MultiPoseNode(cp.Node):
         scale: str = "n",
         device: Literal["cpu", "cuda"] = "cpu",
         frames_key: str = "frame",
+        classes: Optional[List[str]] = ["person"],
     ):
         self.task = task
         self.scale = scale
         self.device = device if device == "cpu" else 0
         self.frames_key = frames_key
+        # adapted from yolo_node.py
+        self.classes_idx = []
+        if classes:
+            for obj_class in classes:
+                class_index = COCO_ORIGINAL_NAMES.index(obj_class)
+                self.classes_idx.append(class_index)
+
         super().__init__(name=name)
 
     def setup(self):
@@ -80,8 +172,10 @@ class MultiPoseNode(cp.Node):
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr
-                # disable verbose output
-                result = self.model(img, device=self.device, verbose=False)[0]
+                # disable verbose output and select interested classses
+                result = self.model(
+                    img, device=self.device, verbose=False, classes=self.classes_idx
+                )[0]
                 # pass down both the rendered result image and the numerial results
                 new_frame = YOLOFrame(
                     arr=result.plot(),
