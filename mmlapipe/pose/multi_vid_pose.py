@@ -1,7 +1,6 @@
 from typing import Dict, List, Literal, Optional
 
 import chimerapy as cp
-import numpy as np
 from chimerapy_orchestrator import step_node
 from mmlapipe.pose.data import YOLOFrame
 
@@ -164,7 +163,7 @@ class MultiPoseNode(cp.Node):
         # Aggregate all inputs
         ret_chunk = cp.DataChunk()
         ret_frames = []
-        for name, data_chunk in data_chunks.items():  # noqa: B007
+        for _, data_chunk in data_chunks.items():  # noqa: B007
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr

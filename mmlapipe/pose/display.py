@@ -2,7 +2,6 @@ from typing import Dict, List
 
 import chimerapy as cp
 import cv2
-import numpy as np
 from chimerapy_orchestrator import sink_node
 
 from mmlapipe.pose.data import YOLOFrame
@@ -21,7 +20,7 @@ class DisplayNode(cp.Node):
         super().__init__(name=name)
 
     def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
-        for name, data_chunk in data_chunks.items():  
+        for _, data_chunk in data_chunks.items():  
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 cv2.imshow(frame.src_id, frame.arr)
