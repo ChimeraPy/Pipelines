@@ -1,13 +1,9 @@
 from typing import Dict, List, Literal, Optional
 
 import chimerapy as cp
-import cv2
-import math
 import numpy as np
-import imutils
 from chimerapy_orchestrator import step_node
 from mmlapipe.pose.data import YOLOFrame
-import os
 
 COCO_ORIGINAL_NAMES = [
     "person",

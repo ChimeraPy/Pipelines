@@ -1,6 +1,5 @@
-import typing
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import numpy as np
 from ultralytics.yolo.engine.results import Results
