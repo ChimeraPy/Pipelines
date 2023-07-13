@@ -1,0 +1,39 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a audio node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_AudioNode",
+      "name": "local-audio",
+      "kwargs": {
+        "backend": "pyaudio",
+        "input_device_id": 13,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_4096",
+        "save_name": "local-audio"
+      },
+      "package": "mmlapipe"
+    }
+  ],
+  "adj": [],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "local-audio"
+    ]
+  }
+}

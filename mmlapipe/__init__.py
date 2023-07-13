@@ -38,6 +38,7 @@ def register_nodes_metadata():
             "mmlapipe.generic_nodes.video_nodes:ShowWindows",
             "mmlapipe.generic_nodes.log_reader:LogReader",
             "mmlapipe.generic_nodes.screen_capture:ScreenCapture",
+            "mmlapipe.generic_nodes.audio_node:AudioNode",
             "mmlapipe.mf_sort_tracking.bbox_painter:BBoxPainter",
             "mmlapipe.mf_sort_tracking.detector:MFSortDetector",
             "mmlapipe.mf_sort_tracking.tracker:MFSortTracker",
