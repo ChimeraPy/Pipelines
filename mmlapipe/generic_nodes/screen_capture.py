@@ -26,6 +26,8 @@ class ScreenCapture(cp.Node):
         The key to use for the frame in the data chunk
     monitor: int, optional (default: 0)
         The monitor to capture
+    save_name: str, optional (default: 0)
+         If a string is provided, save the video (prefixed with this name)
     """
 
     def __init__(
@@ -35,12 +37,14 @@ class ScreenCapture(cp.Node):
         frame_key: str = "frame",
         monitor: int = 0,
         name="ScreenCaptureNode",
+        save_name: typing.Optional[str] = None,
     ):
         self.scale = scale
         self.fps = fps
         self.frame_key = frame_key
         self.capture = None
         self.monitor = monitor
+        self.save_name = save_name
         super().__init__(name=name)
 
     def setup(self):
@@ -58,6 +62,9 @@ class ScreenCapture(cp.Node):
         arr = np.array(img)
         arr = cv2.cvtColor(arr, cv2.COLOR_BGRA2BGR)
         arr = imutils.resize(arr, width=int(arr.shape[1] * self.scale))
+
+        if self.save_name:
+            self.save_video(self.save_name, arr, self.fps)
 
         data_chunk = cp.DataChunk()
         data_chunk.add(self.frame_key, arr)
