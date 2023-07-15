@@ -8,13 +8,9 @@ if typing.TYPE_CHECKING:
 import chimerapy as cp
 import cv2
 import numpy as np
-import torch
-import torch.backends.cudnn as cudnn
 from chimerapy_orchestrator import step_node
 
 from mmlapipe.utils import download_file
-
-cudnn.enabled = True
 
 
 @step_node(name="MMLAPIPE_GazeL2CSNet")
@@ -54,7 +50,7 @@ class GazeL2CSNet(cp.Node):
         self.model_params = {
             "arch": arch,
             "weights": weights,
-            "device": torch.device(device),
+            "device": device,
         }
         self.frames_key = frames_key
         self.model: Optional["Pipeline"] = None
@@ -63,7 +59,15 @@ class GazeL2CSNet(cp.Node):
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        import torch
+        import torch.backends.cudnn as cudnn
+
+        cudnn.enabled = True
+
         from l2cs import Pipeline, render
+
+        dev = self.model_params["device"]
+        self.model_params["device"] = torch.device(dev)
 
         if self.model_params["weights"].startswith("http"):
             with tempfile.NamedTemporaryFile(suffix=".pkl") as f:
