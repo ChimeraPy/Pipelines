@@ -1,13 +1,13 @@
-# MMLAPIPE
-This is a repository of sharable [`ChimeraPy`](https://github.com/oele-isis-vanderbilt/ChimeraPy) pipelines, with various Node implementations and [`ChimeraPyOrchestrator`](https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator) configurations.
+# chimerapy-pipelines
+This is a repository of sharable [`ChimeraPy`](https://github.com/ChimeraPy) pipelines, with various Node implementations and [`Orchestrator`](https://github.com/ChimeraPy/Orchestrator) configurations.
 
 
 ## Installation
 For a basic installation, clone the repository and install the requirements:
 
 ```bash
-$ git clone https://github.com/oele-isis-vanderbilt/MMLAPIPE.git
-$ cd MMLAPIPE
+$ git clone https://github.com/ChimeraPy/Pipelines.git
+$ cd Pipelines
 $ pip install .
 ```
 
@@ -16,7 +16,7 @@ This repository contains several sub-projects with specific dependencies.
 
 
 ### mf_sort
-The [`mf_sort_tracking`](./mmlapipe/mf_sort_tracking) package provides an integration for the [`MF-SORT`](https://github.com/kbvatral/MF-SORT) tracking algorithm with `ChimeraPy`.
+The [`mf_sort_tracking`](chimerapy/pipelines/mf_sort_tracking) package provides an integration for the [`MF-SORT`](https://github.com/kbvatral/MF-SORT) tracking algorithm with `ChimeraPy`.
 
 To install the dependencies for this package, run the following command:
 

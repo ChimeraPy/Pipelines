@@ -13,7 +13,7 @@
   },
   "nodes": [
     {
-      "registry_name": "MMLAPIPE_MFSortVideo",
+      "registry_name": "CPPipelines_MFSortVideo",
       "name": "test-1",
       "kwargs": {
         "video_src": "data/MF_SORT/PETS09-S2L1.mp4",
@@ -24,10 +24,10 @@
         "include_meta": true,
         "loop": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_MFSortDetector",
+      "registry_name": "CPPipelines_MFSortDetector",
       "name": "mf-sort-detector",
       "kwargs": {
         "weights": "https://vanderbilt.box.com/shared/static/0024iks6cwzxehrk4x7xyxwbrm79arx9.pt",
@@ -35,24 +35,24 @@
         "imgsz": 640,
         "frames_key": "image"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_MFSortTracker",
+      "registry_name": "CPPipelines_MFSortTracker",
       "name": "mf-sort-tracker-1",
       "kwargs": {
         "source_key": "test-1",
         "frames_key": "image"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_BBoxPainter",
+      "registry_name": "CPPipelines_BBoxPainter",
       "name": "bbox-painter",
       "kwargs": {
         "frames_key": "image"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     }
   ],
   "adj": [

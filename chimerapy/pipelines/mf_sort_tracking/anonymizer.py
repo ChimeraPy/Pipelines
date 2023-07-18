@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING, Callable, Dict, List, Literal, Optional, Type
 
-import chimerapy as cp
 import cv2
+
+import chimerapy.engine as cpe
 
 if TYPE_CHECKING:
     import torch
@@ -11,11 +12,11 @@ if TYPE_CHECKING:
 
     from .data import MFSortFrame
 
-from chimerapy_orchestrator import step_node
+from chimerapy.orchestrator import step_node
 
 
-@step_node(name="MMLAPIPE_Anonymizer")
-class Anonymizer(cp.Node):
+@step_node(name="CPPipelines_Anonymizer")
+class Anonymizer(cpe.Node):
     """A node that blocks/blurs people the video stream using a YoloV8 instance segmentation masks.
 
     Parameters
@@ -71,7 +72,7 @@ class Anonymizer(cp.Node):
         self.colors = colors
         self.torch = torch
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
         collected_frames: List[MFSortFrame] = []
 
         for _, data_chunk in data_chunks.items():
@@ -119,7 +120,7 @@ class Anonymizer(cp.Node):
                 cv2.imshow(frame.src_id, annotator.result())
                 cv2.waitKey(1)
 
-        ret_chunk = cp.DataChunk()
+        ret_chunk = cpe.DataChunk()
         ret_chunk.add(self.frames_key, collected_frames)
 
         return ret_chunk

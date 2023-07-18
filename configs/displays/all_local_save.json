@@ -1,109 +1,111 @@
 {
-    "mode": "record",
-    "workers": {
-      "manager_ip": "129.59.104.153",
-      "manager_port": 9001,
-      "instances": [
-        {
-          "name": "local",
-          "id": "local",
-          "description": "local worker for the MMLA pipeline demo with a video node"
-        }
-      ]
-    },
-    "nodes": [
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
       {
-        "registry_name": "MMLAPIPE_Video",
-        "name": "test-1",
-        "kwargs": {
-          "video_src": "data/TestData/test1.mp4",
-          "width": 500,
-          "height": 480,
-          "frame_key": "frame",
-          "include_meta": true,
-          "save_name": "test-1"
-        },
-        "package": "mmlapipe"
-      },
-      {
-        "registry_name": "MMLAPIPE_Video",
-        "name": "test-2",
-        "kwargs": {
-          "video_src": "data/TestData/test2.mp4",
-          "width": 500,
-          "height": 480,
-          "frame_key": "frame",
-          "include_meta": true,
-          "save_name": "test-2"
-        },
-        "package": "mmlapipe"
-      },
-      {
-        "registry_name": "MMLAPIPE_Video",
-        "name": "test-3",
-        "kwargs": {
-          "video_src": "data/TestData/test3.mp4",
-          "width": 500,
-          "height": 480,
-          "frame_key": "frame",
-          "include_meta": true,
-          "save_name": "test-3"
-        },
-        "package": "mmlapipe"
-      },
-      {
-        "registry_name": "MMLAPIPE_Video",
-        "name": "test-4",
-        "kwargs": {
-          "video_src": "data/TestData/test4.mp4",
-          "width": 500,
-          "height": 480,
-          "frame_key": "frame",
-          "include_meta": true,
-          "save_name": "test-4"
-        },
-        "package": "mmlapipe"
-    },
-      {
-        "registry_name": "MMLAPIPE_ShowWindows",
-        "name": "show",
-        "kwargs": {
-          "window_xy": [
-            300,
-            300
-          ],
-          "items_per_row": 2
-        },
-        "package": "mmlapipe"
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
       }
-    ],
-    "adj": [
-      [
-        "test-1",
-        "show"
-      ], [
-        "test-2",
-        "show"
-      ], [
-        "test-3",
-        "show"
-      ],
-        [
-            "test-4",
-            "show"
-        ]
-    ],
-    "manager_config": {
-      "logdir": "cp-logs",
-      "port": 9001
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "CPPipelines_Video",
+      "name": "test-1",
+      "kwargs": {
+        "video_src": "data/TestData/test1.mp4",
+        "width": 500,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true,
+        "save_name": "test-1"
+      },
+      "package": "chimerapy-pipelines"
     },
-    "mappings": {
-      "local": [
-        "test-1",
-        "test-2",
-        "test-3",
-        "test-4",
-        "show"
-      ]
+    {
+      "registry_name": "CPPipelines_Video",
+      "name": "test-2",
+      "kwargs": {
+        "video_src": "data/TestData/test2.mp4",
+        "width": 500,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true,
+        "save_name": "test-2"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_Video",
+      "name": "test-3",
+      "kwargs": {
+        "video_src": "data/TestData/test3.mp4",
+        "width": 500,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true,
+        "save_name": "test-3"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_Video",
+      "name": "test-4",
+      "kwargs": {
+        "video_src": "data/TestData/test4.mp4",
+        "width": 500,
+        "height": 480,
+        "frame_key": "frame",
+        "include_meta": true,
+        "save_name": "test-4"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_ShowWindows",
+      "name": "show",
+      "kwargs": {
+        "window_xy": [
+          300,
+          300
+        ],
+        "items_per_row": 2
+      },
+      "package": "chimerapy-pipelines"
     }
+  ],
+  "adj": [
+    [
+      "test-1",
+      "show"
+    ],
+    [
+      "test-2",
+      "show"
+    ],
+    [
+      "test-3",
+      "show"
+    ],
+    [
+      "test-4",
+      "show"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "test-1",
+      "test-2",
+      "test-3",
+      "test-4",
+      "show"
+    ]
   }
+}

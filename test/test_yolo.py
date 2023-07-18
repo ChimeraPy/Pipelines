@@ -3,15 +3,15 @@ import copy
 import os
 import pathlib
 
-import chimerapy as cp
 import cv2
 import pytest
 
+import chimerapy.engine as cpe
+
 # Internal Imports
-import mmlapipe
+from chimerapy.pipelines.yolo_node import YOLONode
 
 # Test Imports
-from .conftest import DATA_DIR
 
 # Constants
 CWD = pathlib.Path(os.path.abspath(__file__)).parent
@@ -28,7 +28,7 @@ def color_cap():
 
 def test_yolo_main(color_cap):
 
-    yolo = mmlapipe.YOLONode(name="yolo", debug="step", classes=["person"])
+    yolo = YOLONode(name="yolo", debug="step", classes=["person"])
 
     yolo.logger = yolo.get_logger()
     yolo.setup()
@@ -36,8 +36,8 @@ def test_yolo_main(color_cap):
 
         # Simulate input feed frame
         ret, frame = color_cap.read()
-        data_chunk = cp.DataChunk()
-        data_chunk.add("color", frame, "image")
+        data_chunk = cpe.DataChunk()
+        data_chunk.add("frame", frame, "image")
 
         yolo.step({"test": data_chunk})
 
@@ -47,7 +47,7 @@ def test_yolo_main(color_cap):
 
 def test_yolo_main_multiple_inputs(color_cap):
 
-    yolo = mmlapipe.YOLONode(name="yolo", debug="step", classes=["person"])
+    yolo = YOLONode(name="yolo", debug="step", classes=["person"])
 
     yolo.logger = yolo.get_logger()
     yolo.setup()
@@ -55,8 +55,8 @@ def test_yolo_main_multiple_inputs(color_cap):
 
         # Simulate input feed frame
         ret, frame = color_cap.read()
-        data_chunk = cp.DataChunk()
-        data_chunk.add("color", frame, "image")
+        data_chunk = cpe.DataChunk()
+        data_chunk.add("frame", frame, "image")
 
         inputs = {
             "test": data_chunk,

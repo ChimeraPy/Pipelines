@@ -1,17 +1,18 @@
 import typing
 
-import chimerapy as cp
 import cv2
 import imutils
 import numpy as np
-from chimerapy_orchestrator import source_node
+
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import source_node
 
 if typing.TYPE_CHECKING:
     from mss.base import MSSBase
 
 
-@source_node(name="MMLAPIPE_ScreenCapture")
-class ScreenCapture(cp.Node):
+@source_node(name="CPPipelines_ScreenCapture")
+class ScreenCapture(cpe.Node):
     """A generic video screen capture node using mss
 
     Parameters
@@ -57,7 +58,7 @@ class ScreenCapture(cp.Node):
             self.capture = mss.mss()
         return self.capture
 
-    def step(self) -> cp.DataChunk:
+    def step(self) -> cpe.DataChunk:
         img = self._get_capture().grab(self.capture.monitors[self.monitor])
         arr = np.array(img)
         arr = cv2.cvtColor(arr, cv2.COLOR_BGRA2BGR)
@@ -66,7 +67,7 @@ class ScreenCapture(cp.Node):
         if self.save_name:
             self.save_video(self.save_name, arr, self.fps)
 
-        data_chunk = cp.DataChunk()
+        data_chunk = cpe.DataChunk()
         data_chunk.add(self.frame_key, arr)
 
         return data_chunk

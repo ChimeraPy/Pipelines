@@ -5,17 +5,20 @@ from typing import Dict, List, Literal, Optional
 if typing.TYPE_CHECKING:
     from mf_sort.detector import Detector
 
-import chimerapy as cp
 import cv2
 import numpy as np
-from chimerapy_orchestrator import step_node
 
-from mmlapipe.mf_sort_tracking.data import MFSortFrame, MFSortTrackedDetections
-from mmlapipe.utils import download_file
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
+from chimerapy.pipelines.mf_sort_tracking.data import (
+    MFSortFrame,
+    MFSortTrackedDetections,
+)
+from chimerapy.pipelines.utils import download_file
 
 
-@step_node(name="MMLAPIPE_MFSortDetector")
-class MFSortDetector(cp.Node):
+@step_node(name="CPPipelines_MFSortDetector")
+class MFSortDetector(cpe.Node):
     """A node that uses Yolo model from mf_sort_tracking package to detect objects in a video stream.
 
     Parameters
@@ -75,8 +78,8 @@ class MFSortDetector(cp.Node):
             self.detector_kwargs["device"] = "cuda"
             self.detector = Detector(**self.detector_kwargs)
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
-        ret_chunk = cp.DataChunk()
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
+        ret_chunk = cpe.DataChunk()
         ret_frames = []
         for name, data_chunk in data_chunks.items():
             self.logger.debug(f"{self}: got from {name}, data={data_chunk}")

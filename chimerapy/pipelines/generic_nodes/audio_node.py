@@ -3,10 +3,11 @@ from enum import Enum
 from multiprocessing import Queue
 from typing import Any, Dict, Optional, Tuple
 
-import chimerapy as cp
 import numpy as np
 import pyaudio
-from chimerapy_orchestrator import source_node
+
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import source_node
 
 
 class Backends(str, Enum):
@@ -168,8 +169,8 @@ class PyAudioBackend(AudioBackend):
         }
 
 
-@source_node(name="MMLAPIPE_AudioNode")
-class AudioNode(cp.Node):
+@source_node(name="CPPipelines_AudioNode")
+class AudioNode(cpe.Node):
     """A generic audio node, which can be used to stream audio (mono, one channel) from a device.
 
     Parameters
@@ -231,7 +232,7 @@ class AudioNode(cp.Node):
         )
         self.backend.setup()
 
-    def step(self) -> cp.DataChunk:
+    def step(self) -> cpe.DataChunk:
         if not self.started:
             self.backend.start_streaming()
             self.started = True
@@ -245,7 +246,7 @@ class AudioNode(cp.Node):
                 **self.backend.save_kwargs(),
             )
 
-        ret_chunk = cp.DataChunk()
+        ret_chunk = cpe.DataChunk()
         ret_chunk.add(self.chunk_key, audio_data)
 
         return ret_chunk
