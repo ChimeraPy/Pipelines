@@ -29,6 +29,8 @@ LOGGING_CONFIG = {
 # Setup the logging configuration
 logging.config.dictConfig(LOGGING_CONFIG)
 
+__version__ = "0.0.1"
+
 
 def register_nodes_metadata():
     nodes = {

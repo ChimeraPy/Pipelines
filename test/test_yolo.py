@@ -37,7 +37,7 @@ def test_yolo_main(color_cap):
         # Simulate input feed frame
         ret, frame = color_cap.read()
         data_chunk = cpe.DataChunk()
-        data_chunk.add("color", frame, "image")
+        data_chunk.add("frame", frame, "image")
 
         yolo.step({"test": data_chunk})
 
@@ -56,7 +56,7 @@ def test_yolo_main_multiple_inputs(color_cap):
         # Simulate input feed frame
         ret, frame = color_cap.read()
         data_chunk = cpe.DataChunk()
-        data_chunk.add("color", frame, "image")
+        data_chunk.add("frame", frame, "image")
 
         inputs = {
             "test": data_chunk,

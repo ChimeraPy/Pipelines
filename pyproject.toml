@@ -71,7 +71,7 @@ extend-exclude = ["run.py"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402", "F401"]
-"mmlapipe/__version__.py" = ["E402"]
+"chimerapy/pipelines/__version__.py" = ["E402"]
 
 
 
