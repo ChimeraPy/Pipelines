@@ -1,7 +1,7 @@
 [project]
-name = "mmlapipe"
+name = "chimerapy-pipelines"
 version = "0.0.1"
-description = "Multimodal Data Pipeline"
+description = "Respository of sharable pipelines for ChimeraPy"
 license = {file = "LICENSE.txt"}
 readme = "README.md"
 requires-python = ">3.6"
@@ -13,7 +13,6 @@ classifiers = [
 ]
 
 dependencies = [
-    'chimerapy @ git+https://github.com/oele-isis-vanderbilt/ChimeraPy@main#egg=chimerapy',
     'numpy',
     'imutils',
     'opencv-python',
@@ -24,7 +23,8 @@ dependencies = [
     'seaborn',
     'requests',
     'mss',
-    'chimerapy-orchestrator @ git+https://github.com/oele-isis-vanderbilt/ChimeraPyOrchestrator@main#egg=chimerapy_orchestrator',
+    'chimerapy-orchestrator',
+    'chimerapy-engine'
 ]
 
 [project.optional-dependencies]
@@ -76,8 +76,8 @@ extend-exclude = ["run.py"]
 
 
 
-[project.entry-points."chimerapy_orchestrator.nodes_registry"]
-get_nodes_registry = "mmlapipe:register_nodes_metadata"
+[project.entry-points."chimerapy.orchestrator.nodes_registry"]
+get_nodes_registry = "chimerapy.pipelines:register_nodes_metadata"
 
 # Reference:
 # https://stackoverflow.com/questions/4673373/logging-within-pytest-tests

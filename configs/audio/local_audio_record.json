@@ -13,7 +13,7 @@
   },
   "nodes": [
     {
-      "registry_name": "MMLAPIPE_AudioNode",
+      "registry_name": "CPPipelines_AudioNode",
       "name": "local-audio",
       "kwargs": {
         "backend": "pyaudio",
@@ -23,7 +23,7 @@
         "chunk_size": "CHUNK_4096",
         "save_name": "local-audio"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     }
   ],
   "adj": [],

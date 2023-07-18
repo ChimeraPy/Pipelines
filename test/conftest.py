@@ -1,17 +1,19 @@
-import pathlib
 import os
+import pathlib
 
 import pytest
-import chimerapy as cp
+
+import chimerapy.engine as cpe
 
 # Constants
 CWD = pathlib.Path(os.path.abspath(__file__)).parent
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent
-DATA_DIR = GIT_ROOT/'data'
+DATA_DIR = GIT_ROOT / "data"
+
 
 @pytest.fixture
 def logreceiver():
-    listener = cp._logger.get_node_id_zmq_listener()
+    listener = cpe._logger.get_node_id_zmq_listener()
     listener.start()
     yield listener
     listener.stop()

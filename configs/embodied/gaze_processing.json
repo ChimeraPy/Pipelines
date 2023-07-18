@@ -13,7 +13,7 @@
   },
   "nodes": [
     {
-      "registry_name": "MMLAPIPE_Video",
+      "registry_name": "CPPipelines_Video",
       "name": "camera",
       "kwargs": {
         "video_src": "https://vanderbilt.box.com/shared/static/pn2usc5wdfjp1azx37dxz2h3ba85sicw.mp4",
@@ -22,10 +22,10 @@
         "include_meta": true,
         "download_video": true
       },
-    "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_GazeL2CSNet",
+      "registry_name": "CPPipelines_GazeL2CSNet",
       "name": "gaze-l2cs-net",
       "kwargs": {
         "weights": "https://vanderbilt.box.com/shared/static/3n5m0upd9n87x7lkrusbe0rh5hkvsgp2.pkl",
@@ -33,7 +33,7 @@
         "frames_key": "frame",
         "show": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     }
   ],
   "adj": [

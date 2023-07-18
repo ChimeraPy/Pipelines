@@ -13,7 +13,7 @@
   },
   "nodes": [
     {
-      "registry_name": "MMLAPIPE_Video",
+      "registry_name": "CPPipelines_Video",
       "name": "test-1",
       "kwargs": {
         "video_src": "data/TestData/test1.mp4",
@@ -22,10 +22,10 @@
         "frame_key": "frame",
         "include_meta": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_Video",
+      "registry_name": "CPPipelines_Video",
       "name": "test-2",
       "kwargs": {
         "video_src": "data/TestData/test2.mp4",
@@ -34,10 +34,10 @@
         "frame_key": "frame",
         "include_meta": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_Video",
+      "registry_name": "CPPipelines_Video",
       "name": "test-3",
       "kwargs": {
         "video_src": "data/TestData/test3.mp4",
@@ -46,10 +46,10 @@
         "frame_key": "frame",
         "include_meta": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_Video",
+      "registry_name": "CPPipelines_Video",
       "name": "test-4",
       "kwargs": {
         "video_src": "data/TestData/test4.mp4",
@@ -58,7 +58,7 @@
         "frame_key": "frame",
         "include_meta": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
       "registry_name": "YOLONode",
@@ -70,15 +70,15 @@
         "per_row_display": 2,
         "debug": null
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MMLAPIPE_ShowWindows",
+      "registry_name": "CPPipelines_ShowWindows",
       "name": "tiled",
       "kwargs": {
         "frames_key": "tiled"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     }
   ],
   "adj": [

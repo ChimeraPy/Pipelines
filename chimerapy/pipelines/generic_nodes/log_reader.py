@@ -3,15 +3,15 @@ import tempfile
 import time
 from typing import Optional, Union
 
-import chimerapy as cp
 import pandas as pd
-from chimerapy_orchestrator import source_node
 
-from mmlapipe.utils import download_file
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import source_node
+from chimerapy.pipelines.utils import download_file
 
 
-@source_node(name="MMLAPIPE_LogReader")
-class LogReader(cp.Node):
+@source_node(name="CPPipelines_LogReader")
+class LogReader(cpe.Node):
     """A node that processes logs from elp package to obtain game state information.
 
     Parameters
@@ -111,8 +111,8 @@ class LogReader(cp.Node):
                 f"{self.logfile}, file not supported by LogReader"
             )
 
-    def step(self) -> cp.DataChunk:
-        data_chunk = cp.DataChunk()
+    def step(self) -> cpe.DataChunk:
+        data_chunk = cpe.DataChunk()
 
         # Get initial time
         if self.step_id == 0:

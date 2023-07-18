@@ -4,15 +4,18 @@ from typing import Dict, List, Optional, Type
 if typing.TYPE_CHECKING:
     from mf_sort import MF_SORT, Detection
 
-import chimerapy as cp
 import numpy as np
-from chimerapy_orchestrator import step_node
 
-from mmlapipe.mf_sort_tracking.data import MFSortFrame, MFSortTrackedDetections
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
+from chimerapy.pipelines.mf_sort_tracking.data import (
+    MFSortFrame,
+    MFSortTrackedDetections,
+)
 
 
-@step_node(name="MMLAPIPE_MFSortTracker")
-class MFSortTracker(cp.Node):
+@step_node(name="CPPipelines_MFSortTracker")
+class MFSortTracker(cpe.Node):
     """A node that uses MF_SORT tracker to track objects in a video stream.
 
     Parameters
@@ -110,8 +113,8 @@ class MFSortTracker(cp.Node):
             for trk_id, detections in detections_by_track_id.items()
         ]
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
-        ret_chunk = cp.DataChunk()
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
+        ret_chunk = cpe.DataChunk()
         tracked_frames = []
 
         for name, data_chunk in data_chunks.items():  # noqa: B007
