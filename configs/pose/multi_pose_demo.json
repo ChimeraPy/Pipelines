@@ -1,0 +1,190 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a video node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "CPPipelines_YOLOVideo",
+      "name": "vid",
+      "kwargs": {
+        "video_src": 0,
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "frame_rate": 60,
+        "include_meta": true
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YOLOVideo",
+      "name": "vid1",
+      "kwargs": {
+        "video_src": "https://joy1.videvo.net/videvo_files/video/free/video0474/large_watermarked/_import_61e8f419920ca9.44638926_preview.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_rate": 30,
+        "frame_key": "frame",
+        "include_meta": true,
+        "loop": true,
+        "download_video": true
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YOLOVideo",
+      "name": "vid2",
+      "kwargs": {
+        "video_src": "https://cdn.videvo.net/videvo_files/video/free/2023-02/large_watermarked/221026_02_Dancer_4k_042_preview.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "frame_rate": 30,
+        "include_meta": true,
+        "loop": true
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YOLOVideo",
+      "name": "vid3",
+      "kwargs": {
+        "video_src": "https://joy1.videvo.net/videvo_files/video/free/video0482/large_watermarked/_import_62bbefe51f3547.77164811_preview.mp4",
+        "width": 640,
+        "height": 480,
+        "frame_key": "frame",
+        "frame_rate": 30,
+        "include_meta": true,
+        "loop": true
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloV8Node",
+      "name": "pose",
+      "kwargs": {
+        "task": "pose",
+        "scale": "n",
+        "device": "cuda"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
+      "name": "save",
+      "kwargs": {
+        "source_key": "vid",
+        "filename": "testing",
+        "file_format": "df"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
+      "name": "save1",
+      "kwargs": {
+        "source_key": "vid1",
+        "filename": "testing",
+        "file_format": "vid"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
+      "name": "save3",
+      "kwargs": {
+        "source_key": "vid3",
+        "filename": "testing",
+        "file_format": "df"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
+      "name": "save2",
+      "kwargs": {
+        "source_key": "vid2",
+        "filename": "testing",
+        "file_format": "vid"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_YoloDisplayNode",
+      "name": "display",
+      "kwargs": {
+        "frames_key": "frame"
+      },
+      "package": "chimerapy-pipelines"
+    }
+  ],
+  "adj": [
+    [
+      "vid",
+      "pose"
+    ],
+    [
+      "vid1",
+      "pose"
+    ],
+    [
+      "vid2",
+      "pose"
+    ],
+    [
+      "vid3",
+      "pose"
+    ],
+    [
+      "pose",
+      "save"
+    ],
+    [
+      "pose",
+      "save1"
+    ],
+    [
+      "pose",
+      "save2"
+    ],
+    [
+      "pose",
+      "save3"
+    ],
+    [
+      "pose",
+      "display"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "vid1",
+      "pose",
+      "save",
+      "save1",
+      "save2",
+      "save3",
+      "vid",
+      "vid2",
+      "vid3",
+      "display"
+    ]
+  },
+  "timeouts": {
+    "commit_timeout": 500,
+    "shutdown_timeout": 300
+  }
+}
