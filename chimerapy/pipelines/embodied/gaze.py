@@ -5,20 +5,16 @@ from typing import Dict, Literal, Optional
 if typing.TYPE_CHECKING:
     from l2cs import Pipeline
 
-import chimerapy as cp
 import cv2
 import numpy as np
-import torch
-import torch.backends.cudnn as cudnn
-from chimerapy_orchestrator import step_node
 
-from mmlapipe.utils import download_file
-
-cudnn.enabled = True
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
+from chimerapy.pipelines.utils import download_file
 
 
-@step_node(name="MMLAPIPE_GazeL2CSNet")
-class GazeL2CSNet(cp.Node):
+@step_node(name="CPPipelines_GazeL2CSNet")
+class GazeL2CSNet(cpe.Node):
     """A node that uses L2CS-Net model from l2cs package to predict 3D gaze from a video stream.
 
     Parameters
@@ -54,7 +50,7 @@ class GazeL2CSNet(cp.Node):
         self.model_params = {
             "arch": arch,
             "weights": weights,
-            "device": torch.device(device),
+            "device": device,
         }
         self.frames_key = frames_key
         self.model: Optional["Pipeline"] = None
@@ -63,7 +59,15 @@ class GazeL2CSNet(cp.Node):
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
+        import torch
+        import torch.backends.cudnn as cudnn
+
+        cudnn.enabled = True
+
         from l2cs import Pipeline, render
+
+        dev = self.model_params["device"]
+        self.model_params["device"] = torch.device(dev)
 
         if self.model_params["weights"].startswith("http"):
             with tempfile.NamedTemporaryFile(suffix=".pkl") as f:
@@ -75,7 +79,7 @@ class GazeL2CSNet(cp.Node):
             self.model = Pipeline(**self.model_params)
         self.render = render
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
         frame: np.ndarray = data_chunks["camera"].get(self.frames_key)["value"]
 
         try:
@@ -91,7 +95,7 @@ class GazeL2CSNet(cp.Node):
             cv2.imshow("gaze", vis)
             cv2.waitKey(1)
 
-        ret_chunk = cp.DataChunk()
+        ret_chunk = cpe.DataChunk()
         ret_chunk.add("frame", vis, "image")
         ret_chunk.add("results", results)
 

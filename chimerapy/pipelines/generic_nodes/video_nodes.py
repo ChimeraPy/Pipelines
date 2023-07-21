@@ -1,20 +1,20 @@
+import datetime
 import os
 import tempfile
 import time
-import datetime
 from typing import Any, Dict, Optional, Tuple, Union
 
-import chimerapy as cp
 import cv2
 import imutils
 import numpy as np
-from chimerapy_orchestrator import sink_node, source_node
 
-from mmlapipe.utils import download_file
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import sink_node, source_node
+from chimerapy.pipelines.utils import download_file
 
 
-@source_node(name="MMLAPIPE_Video")
-class Video(cp.Node):
+@source_node(name="CPPipelines_Video")
+class Video(cpe.Node):
     """A generic video capture node.
 
     This can be used to capture a local webcam or a video from the local file system
@@ -37,6 +37,8 @@ class Video(cp.Node):
         Whether to include the metadata in the data chunk
     loop: bool, optional (default: False)
         Whether to loop the video when it reaches the end
+    save_name: str, optional (default: None)
+        If a string is provided, save the video (prefixed with this name)
     **kwargs
         Additional keyword arguments to pass to the Node constructor
 
@@ -58,6 +60,7 @@ class Video(cp.Node):
         include_meta: bool = False,
         loop: bool = False,
         download_video: bool = False,
+        save_name: Optional[str] = None,
         **kwargs,
     ) -> None:
         self.video_src = video_src
@@ -72,6 +75,7 @@ class Video(cp.Node):
         self.debug = kwargs.get("debug", False)
         self.download_video = download_video
         self.loop = loop
+        self.save_name = save_name
         super().__init__(name=name, **kwargs)
 
     def setup(self) -> None:
@@ -82,8 +86,8 @@ class Video(cp.Node):
         self.cp = cv2.VideoCapture(self.video_src)
         self.frame_count = 0
 
-    def step(self) -> cp.DataChunk:
-        data_chunk = cp.DataChunk()
+    def step(self) -> cpe.DataChunk:
+        data_chunk = cpe.DataChunk()
         ret, frame = self.cp.read()
 
         if not ret:
@@ -98,6 +102,8 @@ class Video(cp.Node):
                     self.cp.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
                 ret, frame = self.cp.read()
+                if self.save_name is not None:
+                    self.save_video(self.save_name, frame, self.frame_rate)
             else:
                 self.logger.error("Could not read frame from video source")
                 h = self.height or 480
@@ -112,6 +118,9 @@ class Video(cp.Node):
                     (0, 0, 255),
                     2,
                 )
+        else:
+            if self.save_name is not None:
+                self.save_video(self.save_name, frame, self.frame_rate)
 
         if self.width or self.height:
             frame = imutils.resize(frame, width=self.width, height=self.height)
@@ -146,11 +155,11 @@ class Video(cp.Node):
             delta = (current_datetime - self.initial).total_seconds()
             expected = self.frame_count / self.frame_rate
             sleep_time = expected - delta
-            time.sleep(max(self.sleep_factor*sleep_time, 0))
+            time.sleep(max(self.sleep_factor * sleep_time, 0))
 
         # Update
         self.frame_count += 1
-            
+
         return data_chunk
 
     def teardown(self) -> None:
@@ -168,8 +177,8 @@ class Video(cp.Node):
         return fname
 
 
-@sink_node(name="MMLAPIPE_ShowWindows")
-class ShowWindows(cp.Node):
+@sink_node(name="CPPipelines_ShowWindows")
+class ShowWindows(cpe.Node):
     """A node to show the video/images in a window.
 
     Parameters
@@ -199,7 +208,7 @@ class ShowWindows(cp.Node):
         self.items_per_row = items_per_row
         super().__init__(name=name, **kwargs)
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> None:
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> None:
         max_f_height = 0
         prev_position = None
         for idx, (name, data_chunk) in enumerate(data_chunks.items()):

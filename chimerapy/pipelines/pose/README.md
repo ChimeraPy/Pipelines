@@ -1,8 +1,8 @@
 # Integrating YOLOv8
 ## Nodes
-- **video: YOLOVideo** -- Similar to the other video nodes, no special configuration needed for it. Directly connect it to MultiPoseNode to use YOLO models on the source video. 
+- **video: YOLOVideo** -- Similar to the other video nodes, no special configuration needed for it. Directly connect it to MultiPoseNode to use YOLO models on the source video.
 - **display: DisplayNode** -- This node is used to display the results after applying YOLO on video source, it connects directly to the Pose node and display each video in a separate window with window id matching the video src id
-- **multi_vid_pose: MultiPoseNode** -- This node accepts multiple video node and applies specified YOLO model on frames of those videos. Need to specify specific task and scale of the YOLO model. Currently testing with YOLOv8 pose model, but also support segmentation and detection model, classification model is not supported. 
+- **multi_vid_pose: MultiPoseNode** -- This node accepts multiple video node and applies specified YOLO model on frames of those videos. Need to specify specific task and scale of the YOLO model. Currently testing with YOLOv8 pose model, but also support segmentation and detection model, classification model is not supported.
 - **multi_save: MultiSaveNode** -- This node saves results from MultiPoseNode. Need to specify the save format ("df" (csv) or "vid" (mp4)) and the source_key of the video.
 
 \* All functionality only tested on linux...
@@ -30,7 +30,7 @@ There is an example config file named "multi_pose_demo.json". That has 4 separat
 |153| person| 0 | 0.928| [195.58 191.6 589.3 479.76]|"[[474.83 498.74 ...][367.76 320.8 ...][0.98147 0.94374 ...]]"|
 
 #### 17 Pose keypoints:
-    facial: 
+    facial:
     - nose:0
     - left/right eye: 1,2
     - left/right ear: 3,4
@@ -44,8 +44,8 @@ There is an example config file named "multi_pose_demo.json". That has 4 separat
     - left/right ankle: 15,16
 
 ### Object Detection
-| frame_count      | name |class| confidence| box(x1, y1, x2, y2) | 
-| ----------- | ----------- |----------- | ----------- | ----------- | 
+| frame_count      | name |class| confidence| box(x1, y1, x2, y2) |
+| ----------- | ----------- |----------- | ----------- | ----------- |
 |153| tv| 62 | 0.928| [195.58 191.6 589.3 479.76]
 ### Segmentation
 | frame_count      | name |class| confidence| box(x1, y1, x2, y2) | segments(x, y)

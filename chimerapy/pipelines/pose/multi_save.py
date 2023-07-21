@@ -1,10 +1,12 @@
 from typing import Dict, List
+
+import numpy as np
 import pandas as pd
 
-import chimerapy as cp
-import numpy as np
-from chimerapy_orchestrator import sink_node
-from mmlapipe.pose.data import YOLOFrame
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import sink_node
+
+from .data import YOLOFrame
 
 
 def to_dataframe(results, frame_cnt, normalize=False):
@@ -51,8 +53,8 @@ def to_dataframe(results, frame_cnt, normalize=False):
     return pd.DataFrame(lst)
 
 
-@sink_node
-class MultiSaveNode(cp.Node):
+@sink_node(name="CPPipelines_YoloMultiSaveNode")
+class MultiSaveNode(cpe.Node):
     """A node to save results from Yolov8 models
 
     Parameters
@@ -88,7 +90,7 @@ class MultiSaveNode(cp.Node):
         self.fps = fps
         super().__init__(name=name)
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> None:
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> None:
         for _, data_chunk in data_chunks.items():
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
@@ -98,14 +100,19 @@ class MultiSaveNode(cp.Node):
                         frame_cnt = frame.frame_count
                         if results:
                             dfs = [
-                                to_dataframe(result, frame_cnt) for result in results
+                                to_dataframe(result, frame_cnt)
+                                for result in results
                             ]
                             df = pd.concat(dfs, ignore_index=True)
-                            self.save_tabular(self.filename + "-" + frame.src_id, df)
+                            self.save_tabular(
+                                self.filename + "-" + frame.src_id, df
+                            )
 
                     elif "vid" == self.format:
                         img = frame.arr
                         if img.size > 0:
                             self.save_video(
-                                self.filename + "-" + frame.src_id, img, self.fps
+                                self.filename + "-" + frame.src_id,
+                                img,
+                                self.fps,
                             )

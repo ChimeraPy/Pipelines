@@ -1,8 +1,9 @@
 from typing import Dict, List, Literal, Optional
 
-import chimerapy as cp
-from chimerapy_orchestrator import step_node
-from mmlapipe.pose.data import YOLOFrame
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
+
+from .data import YOLOFrame
 
 COCO_ORIGINAL_NAMES = [
     "person",
@@ -88,8 +89,8 @@ COCO_ORIGINAL_NAMES = [
 ]
 
 
-@step_node
-class MultiPoseNode(cp.Node):
+@step_node(name="CPPipelines_YoloMultiPoseNode")
+class MultiPoseNode(cpe.Node):
 
     """A node to apply YOLOv8 models on video src.
 
@@ -134,8 +135,12 @@ class MultiPoseNode(cp.Node):
         scale: str = "n",
         device: Literal["cpu", "cuda"] = "cpu",
         frames_key: str = "frame",
-        classes: Optional[List[str]] = ["person"],
+        classes: Optional[List[str]] = None,
     ):
+
+        if classes is None:
+            classes = ["person"]  # default to person
+
         self.task = task
         self.scale = scale
         self.device = device if device == "cpu" else 0
@@ -159,17 +164,20 @@ class MultiPoseNode(cp.Node):
         else:
             self.model = YOLO(f"yolov8{self.scale}.pt")
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]):
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
         # Aggregate all inputs
-        ret_chunk = cp.DataChunk()
+        ret_chunk = cpe.DataChunk()
         ret_frames = []
         for _, data_chunk in data_chunks.items():  # noqa: B007
             frames: List[YOLOFrame] = data_chunk.get(self.frames_key)["value"]
             for frame in frames:
                 img = frame.arr
-                # disable verbose output and select interested classses
+                # disable verbose output and select interested classes
                 result = self.model(
-                    img, device=self.device, verbose=False, classes=self.classes_idx
+                    img,
+                    device=self.device,
+                    verbose=False,
+                    classes=self.classes_idx,
                 )[0]
                 # pass down both the rendered result image and the numerial results
                 new_frame = YOLOFrame(
@@ -179,6 +187,7 @@ class MultiPoseNode(cp.Node):
                     result=result,
                 )
                 ret_frames.append(new_frame)
+
         ret_chunk.add(self.frames_key, ret_frames)
 
         return ret_chunk

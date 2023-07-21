@@ -1,15 +1,15 @@
 from typing import Dict, List, Optional, Tuple
 
-import chimerapy as cp
 import cv2
 import numpy as np
-from chimerapy_orchestrator import step_node
 
-from mmlapipe.mf_sort_tracking.data import MFSortFrame
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
+from chimerapy.pipelines.mf_sort_tracking.data import MFSortFrame
 
 
-@step_node(name="MMLAPIPE_BBoxPainter")
-class BBoxPainter(cp.Node):
+@step_node(name="CPPipelines_BBoxPainter")
+class BBoxPainter(cpe.Node):
     """A node that paints bounding boxes on a frame."""
 
     def __init__(
@@ -62,8 +62,8 @@ class BBoxPainter(cp.Node):
                 2,
             )
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
-        ret_chunk = cp.DataChunk()
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
+        ret_chunk = cpe.DataChunk()
         collected_frames = []
         for name, data_chunk in data_chunks.items():  # noqa: B007
             frames: List[MFSortFrame] = data_chunk.get(self.frames_key)["value"]

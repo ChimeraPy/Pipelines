@@ -13,7 +13,7 @@
   },
   "nodes": [
     {
-      "registry_name": "YOLOVideo",
+      "registry_name": "CPPipelines_YOLOVideo",
       "name": "vid",
       "kwargs": {
         "video_src": 0,
@@ -23,10 +23,10 @@
         "frame_rate": 60,
         "include_meta": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "YOLOVideo",
+      "registry_name": "CPPipelines_YOLOVideo",
       "name": "vid1",
       "kwargs": {
         "video_src": "https://joy1.videvo.net/videvo_files/video/free/video0474/large_watermarked/_import_61e8f419920ca9.44638926_preview.mp4",
@@ -38,10 +38,10 @@
         "loop": true,
         "download_video": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "YOLOVideo",
+      "registry_name": "CPPipelines_YOLOVideo",
       "name": "vid2",
       "kwargs": {
         "video_src": "https://cdn.videvo.net/videvo_files/video/free/2023-02/large_watermarked/221026_02_Dancer_4k_042_preview.mp4",
@@ -52,10 +52,10 @@
         "include_meta": true,
         "loop": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "YOLOVideo",
+      "registry_name": "CPPipelines_YOLOVideo",
       "name": "vid3",
       "kwargs": {
         "video_src": "https://joy1.videvo.net/videvo_files/video/free/video0482/large_watermarked/_import_62bbefe51f3547.77164811_preview.mp4",
@@ -66,65 +66,65 @@
         "include_meta": true,
         "loop": true
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MultiPoseNode",
+      "registry_name": "CPPipelines_YoloMultiPoseNode",
       "name": "pose",
       "kwargs": {
         "task": "pose",
         "scale": "n",
         "device": "cuda"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MultiSaveNode",
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
       "name": "save",
       "kwargs": {
         "source_key": "vid",
         "filename": "testing",
         "file_format": "df"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MultiSaveNode",
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
       "name": "save1",
       "kwargs": {
         "source_key": "vid1",
         "filename": "testing",
         "file_format": "vid"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MultiSaveNode",
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
       "name": "save3",
       "kwargs": {
         "source_key": "vid3",
         "filename": "testing",
         "file_format": "df"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "MultiSaveNode",
+      "registry_name": "CPPipelines_YoloMultiSaveNode",
       "name": "save2",
       "kwargs": {
         "source_key": "vid2",
         "filename": "testing",
         "file_format": "vid"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "DisplayNode",
+      "registry_name": "CPPipelines_YoloDisplayNode",
       "name": "display",
       "kwargs": {
         "frames_key": "frame"
       },
-      "package": "mmlapipe"
+      "package": "chimerapy-pipelines"
     }
   ],
   "adj": [
@@ -184,7 +184,7 @@
     ]
   },
   "timeouts": {
-    "commit_timeout": 120,
+    "commit_timeout": 500,
     "shutdown_timeout": 300
   }
 }

@@ -1,9 +1,10 @@
 from typing import Dict, List, Literal, Optional
 
-import chimerapy as cp
 import cv2
 import imutils
-from chimerapy_orchestrator import step_node
+
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
 
 # Reference: https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/
 COCO_ORIGINAL_NAMES = [
@@ -91,7 +92,7 @@ COCO_ORIGINAL_NAMES = [
 
 
 @step_node
-class YOLONode(cp.Node):
+class YOLONode(cpe.Node):
     def __init__(
         self,
         name: str,
@@ -124,7 +125,7 @@ class YOLONode(cp.Node):
         if self.interested_classes_idx:
             self.model.classes = self.interested_classes_idx
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]):
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]):
         # Aggreate all inputs
         imgs = []
         for name, data_chunk in data_chunks.items():  # noqa: B007
@@ -135,7 +136,7 @@ class YOLONode(cp.Node):
 
         # Get the rendered image
         renders = results.render()
-        data_chunk = cp.DataChunk()
+        data_chunk = cpe.DataChunk()
 
         for i, name in enumerate(data_chunks):  # noqa: B007
             data_chunk.add(f"xyx-{i}", results.pandas().xyxy[i])

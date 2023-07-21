@@ -8,12 +8,6 @@
         "name": "local",
         "id": "local",
         "description": "local worker for the MMLA pipeline demo with a video node"
-      },
-      {
-        "name": "worker1",
-        "id": "worker1",
-        "remote": true,
-        "description": "worker1 for the MMLA pipeline demo with a video node for showing only"
       }
     ]
   },
@@ -23,10 +17,11 @@
       "name": "test-1",
       "kwargs": {
         "video_src": "data/TestData/test1.mp4",
-        "width": 640,
+        "width": 500,
         "height": 480,
         "frame_key": "frame",
-        "include_meta": true
+        "include_meta": true,
+        "save_name": "test-1"
       },
       "package": "chimerapy-pipelines"
     },
@@ -35,10 +30,11 @@
       "name": "test-2",
       "kwargs": {
         "video_src": "data/TestData/test2.mp4",
-        "width": 640,
+        "width": 500,
         "height": 480,
         "frame_key": "frame",
-        "include_meta": true
+        "include_meta": true,
+        "save_name": "test-2"
       },
       "package": "chimerapy-pipelines"
     },
@@ -47,10 +43,11 @@
       "name": "test-3",
       "kwargs": {
         "video_src": "data/TestData/test3.mp4",
-        "width": 640,
+        "width": 500,
         "height": 480,
         "frame_key": "frame",
-        "include_meta": true
+        "include_meta": true,
+        "save_name": "test-3"
       },
       "package": "chimerapy-pipelines"
     },
@@ -59,30 +56,23 @@
       "name": "test-4",
       "kwargs": {
         "video_src": "data/TestData/test4.mp4",
-        "width": 640,
+        "width": 500,
         "height": 480,
         "frame_key": "frame",
-        "include_meta": true
-      },
-      "package": "chimerapy-pipelines"
-    },
-    {
-      "registry_name": "YOLONode",
-      "name": "yolo",
-      "kwargs": {
-        "classes": [
-          "person"
-        ],
-        "per_row_display": 2,
-        "debug": null
+        "include_meta": true,
+        "save_name": "test-4"
       },
       "package": "chimerapy-pipelines"
     },
     {
       "registry_name": "CPPipelines_ShowWindows",
-      "name": "tiled",
+      "name": "show",
       "kwargs": {
-        "frames_key": "tiled"
+        "window_xy": [
+          300,
+          300
+        ],
+        "items_per_row": 2
       },
       "package": "chimerapy-pipelines"
     }
@@ -90,23 +80,19 @@
   "adj": [
     [
       "test-1",
-      "yolo"
+      "show"
     ],
     [
       "test-2",
-      "yolo"
+      "show"
     ],
     [
       "test-3",
-      "yolo"
+      "show"
     ],
     [
       "test-4",
-      "yolo"
-    ],
-    [
-      "yolo",
-      "tiled"
+      "show"
     ]
   ],
   "manager_config": {
@@ -119,14 +105,7 @@
       "test-2",
       "test-3",
       "test-4",
-      "yolo"
-    ],
-    "worker1": [
-      "tiled"
+      "show"
     ]
-  },
-  "timeouts": {
-    "commit_timeout": 120,
-    "shutdown_timeout": 300
   }
 }

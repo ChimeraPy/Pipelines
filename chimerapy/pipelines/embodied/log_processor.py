@@ -5,16 +5,17 @@ from typing import Dict
 if typing.TYPE_CHECKING:
     from elp import LogProcessor
 
-import chimerapy as cp
 import cv2
 import pandas as pd
-from chimerapy_orchestrator import step_node
+
+import chimerapy.engine as cpe
+from chimerapy.orchestrator import step_node
 
 CROP = {"top": 179, "left": 580, "bottom": 73, "right": 356}
 
 
 @step_node(name="MMLAPIPE_GEMSTEPLogProcessor")
-class GEMSTEPLogProcessor(cp.Node):
+class GEMSTEPLogProcessor(cpe.Node):
     """A node that processes logs from elp package to obtain game state information.
 
     Parameters
@@ -48,7 +49,7 @@ class GEMSTEPLogProcessor(cp.Node):
             corrections={"OFFSET": (-180, -260), "AFFINE": (2.25, 2)}
         )
 
-    def step(self, data_chunks: Dict[str, cp.DataChunk]) -> cp.DataChunk:
+    def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
 
         # Extract the data
         data = data_chunks["logs"].get(self.data_key)["value"]
@@ -91,7 +92,7 @@ class GEMSTEPLogProcessor(cp.Node):
             cv2.waitKey(1)
 
         # Package it
-        ret_data_chunk = cp.DataChunk()
+        ret_data_chunk = cpe.DataChunk()
         ret_data_chunk.add(self.data_key, self.result)
         ret_data_chunk.add(self.frame_key, frame, "image")
 

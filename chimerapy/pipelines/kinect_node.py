@@ -2,12 +2,13 @@ import pathlib
 import time
 from typing import Literal
 
-import chimerapy as cp
 import cv2
 import imutils
 
+import chimerapy.engine as cpe
 
-class KinectNode(cp.Node):
+
+class KinectNode(cpe.Node):
     def __init__(
         self,
         name: str,
@@ -28,7 +29,7 @@ class KinectNode(cp.Node):
             str(self.kinect_data_folder / "DepthStream.mp4")
         )
 
-    def step(self) -> cp.DataChunk:
+    def step(self) -> cpe.DataChunk:
         time.sleep(1 / 30)
 
         # Read data
@@ -40,7 +41,7 @@ class KinectNode(cp.Node):
             cv2.imshow(f"{self.name}-depth", imutils.resize(depth, width=400))
             cv2.waitKey(1)
 
-        data_chunk = cp.DataChunk()
+        data_chunk = cpe.DataChunk()
         data_chunk.add("color", frame, "image")
         data_chunk.add("depth", depth, "image")
 
