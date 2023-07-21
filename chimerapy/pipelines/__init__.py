@@ -49,10 +49,10 @@ def register_nodes_metadata():
             "chimerapy.pipelines.yolo_node:YOLONode",
             "chimerapy.pipelines.embodied.gaze:GazeL2CSNet",
             "chimerapy.pipelines.embodied.log_processor:GEMSTEPLogProcessor",
-            "chimerapy.pipelines.pose.video:YOLOVideo",
-            "chimerapy.pipelines.pose.multi_vid_pose:MultiPoseNode",
-            "chimerapy.pipelines.pose.multi_save:MultiSaveNode",
-            "chimerapy.pipelines.pose.display:DisplayNode",
+            "chimerapy.pipelines.yolov8.video:YOLOVideo",
+            "chimerapy.pipelines.yolov8.multi_vid_pose:YoloV8Node",
+            "chimerapy.pipelines.yolov8.multi_save:MultiSaveNode",
+            "chimerapy.pipelines.yolov8.display:DisplayNode",
         ],
     }
 

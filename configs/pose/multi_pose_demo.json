@@ -69,7 +69,7 @@
       "package": "chimerapy-pipelines"
     },
     {
-      "registry_name": "CPPipelines_YoloMultiPoseNode",
+      "registry_name": "CPPipelines_YoloV8Node",
       "name": "pose",
       "kwargs": {
         "task": "pose",

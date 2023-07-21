@@ -67,7 +67,7 @@ class MultiSaveNode(cpe.Node):
         The key to access the frames in the video.
     filename: str, optional (default: 'yolo_results')
         The name of the file that results will be saved to
-    format: str, optional (default: 'df')
+    file_format: str, optional (default: 'df')
         The format that results will be saved as. Two option available
         video (mp4, param: vid) and table (csv, param: df)
     fps: int, optional (default: 30)

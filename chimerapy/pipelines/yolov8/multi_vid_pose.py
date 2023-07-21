@@ -89,23 +89,20 @@ COCO_ORIGINAL_NAMES = [
 ]
 
 
-@step_node(name="CPPipelines_YoloMultiPoseNode")
-class MultiPoseNode(cpe.Node):
+@step_node(name="CPPipelines_YoloV8Node")
+class YoloV8Node(cpe.Node):
 
     """A node to apply YOLOv8 models on video src.
 
     Parameters:
     ----------
-    name: str, optional (default: 'SaveNode')
+    name: str, optional (default: 'YoloV8Node')
         The name of the node.
 
-    per_row_display: int, optional (default: 1)
-        The number of videos to display per row.
-
-    task: str, optional (default: 'pose')
+    task: str, optional (default: 'yolov8')
         The type of task to perform. (dash to satisfy the model name)
         "" - detection
-        "pose" - pose estimation
+        "yolov8" - yolov8 estimation
         "seg" - segmentation
         "cls" - classification (not fully supported yet)
 
@@ -114,12 +111,6 @@ class MultiPoseNode(cpe.Node):
 
     device: Literal["cpu", "cuda"], optional (default: "cpu")
         The device to use for running model.
-
-    save: bool, optional (default: False)
-        Whether to save the detection/estimation results.
-
-    save_format: str, optional (default: 'txt')
-        The format in which to save the results.
 
     frames_key: str, optional (default: 'frame')
         The key to access the frames in the video.
@@ -130,8 +121,8 @@ class MultiPoseNode(cpe.Node):
 
     def __init__(
         self,
-        name: str,
-        task: str = "pose",
+        name: str = "YoloV8Node",
+        task: str = "yolov8",
         scale: str = "n",
         device: Literal["cpu", "cuda"] = "cpu",
         frames_key: str = "frame",
@@ -179,7 +170,7 @@ class MultiPoseNode(cpe.Node):
                     verbose=False,
                     classes=self.classes_idx,
                 )[0]
-                # pass down both the rendered result image and the numerial results
+                # pass down both the rendered result image and the numerical results
                 new_frame = YOLOFrame(
                     arr=result.plot(),
                     frame_count=frame.frame_count,
