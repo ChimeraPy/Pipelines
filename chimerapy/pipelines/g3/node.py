@@ -12,7 +12,7 @@ from chimerapy.orchestrator import source_node
 
 @source_node(name="CPPipelines_G3")
 class G3(cpe.Node):
-    """A node that connects to a G3 instance to perform streaming and recording operations.
+    """A node that connects to a Tobii Glasses 3 instance to perform streaming and recording operations.
 
     Sample `gaze_data` in datachunk:
     ```JSON
@@ -35,9 +35,9 @@ class G3(cpe.Node):
     Parameters
     ----------
     hostname: str, required
-        The key to use for the frame in the data chunk
+        The G3 device's serial number (e.g. TG03B-080200004381), used for connections.
     name: str, optional (default: "")
-        The name of the node. If not provided, the hostname will be used.
+        The name of the node. If not provided, the `hostname` will be used.
     show_gaze: bool, optional (default: False)
         Whether to render the gaze circle on video frames
     frames_key: str, optional (default: "frame")
@@ -106,8 +106,8 @@ class G3(cpe.Node):
 
         ret_chunk.add(self.frame_key, frame_data, "image")
         ret_chunk.add("gaze_data", gaze_data)
-        ret_chunk.add("frame_timestamp", frame_timestamp)
-        ret_chunk.add("gaze_timestamp", gaze_timestamp)
+        # ret_chunk.add("frame_timestamp", frame_timestamp)
+        # ret_chunk.add("gaze_timestamp", gaze_timestamp)
 
         return ret_chunk
 
