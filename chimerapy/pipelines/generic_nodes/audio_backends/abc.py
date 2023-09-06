@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from queue import Queue
+from typing import Literal
 
 
 class AudioFormat(str, Enum):
@@ -21,6 +22,7 @@ class SampleRate(str, Enum):
 class ChunkSize(str, Enum):
     """An enum for chunk sizes"""
 
+    CHUNK_512 = "CHUNK_512"
     CHUNK_1024 = "CHUNK_1024"
     CHUNK_2048 = "CHUNK_2048"
     CHUNK_4096 = "CHUNK_4096"
@@ -32,6 +34,7 @@ class AudioBackend(ABC):
     """An abstract base class for audio backends."""
 
     OPTION_MAPPERS = {}
+    BACKEND_TYPE: Literal["blocking", "nonblocking"] = "blocking"
 
     def __init__(
         self,
@@ -64,5 +67,9 @@ class AudioBackend(ABC):
         return NotImplemented
 
     @abstractmethod
-    def save_kwargs(self):
+    def audio_save_info(self):
+        return NotImplemented
+
+    @abstractmethod
+    def read(self):
         return NotImplemented

@@ -74,28 +74,39 @@ class AudioNode(cpe.Node):
         super().__init__(name=name)
 
     def setup(self) -> None:
-        self.queue = Queue()
         Backend = audio_backends.get_backend(self.options.pop("backend"))
-        self.backend = Backend(
-            self.queue,
-            audio_format=self.options["audio_format"],
-            sample_rate=self.options["sample_rate"],
-            chunk_size=self.options["chunk_size"],
-        )
+        if Backend.BACKEND_TYPE == "blocking":
+            self.queue = Queue()
+            self.backend = Backend(
+                chunk_queue=self.queue,
+                audio_format=self.options["audio_format"],
+                sample_rate=self.options["sample_rate"],
+                chunk_size=self.options["chunk_size"],
+            )
+        else:
+            self.backend = Backend(
+                chunk_queue=None,
+                audio_format=self.options["audio_format"],
+                sample_rate=self.options["sample_rate"],
+                chunk_size=self.options["chunk_size"],
+            )
         self.backend.setup()
 
     def step(self) -> cpe.DataChunk:
         if not self.started:
             self.backend.start_streaming()
             self.started = True
-        audio_data = self.queue.get()
+        if self.backend.BACKEND_TYPE == "nonblocking":
+            audio_data = self.queue.get()
+        else:
+            audio_data = self.backend.read()
 
         if self.save_name is not None:
-            self.save_audio(
-                name=self.save_name,
-                data=audio_data,
-                channels=1,
-                **self.backend.save_kwargs(),
+            save_info = self.backend.audio_save_info()
+            function_name = save_info.pop("function", "save_audio")
+            save_func = getattr(self, function_name)
+            save_func(
+                name=self.save_name, data=audio_data, channels=1, **save_info
             )
 
         ret_chunk = cpe.DataChunk()

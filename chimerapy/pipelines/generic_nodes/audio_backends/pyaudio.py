@@ -40,10 +40,12 @@ class PyAudioBackend(AudioBackend):
         ChunkSize.CHUNK_4096: 4096,
     }
 
-    NUMPY_FORMATS = {
+    NUMPYFORMATS = {
         AudioFormat.INT16: np.int16,
         AudioFormat.INT32: np.int32,
     }
+
+    BACKEND_TYPE = "nonblocking"
 
     def __init__(
         self,
@@ -93,8 +95,14 @@ class PyAudioBackend(AudioBackend):
         )
         return None, pyaudio.paContinue
 
-    def save_kwargs(self) -> Dict[str, Any]:
+    def audio_save_info(self) -> Dict[str, Any]:
         return {
             "format": self.OPTION_MAPPERS[self.audio_format],
             "rate": self.OPTION_MAPPERS[self.sample_rate],
+            "function": "save_audio",
         }
+
+    def read(self):
+        raise NotImplementedError(
+            "PyAudioBackend is nonblocking, use queue instead."
+        )
