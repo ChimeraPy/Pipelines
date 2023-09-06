@@ -32,9 +32,9 @@ class PVRecorderBackend(AudioBackend):
 
     OPTION_MAPPERS = {
         ChunkSize.CHUNK_512: 512,
-        ChunkSize.CHUNK_1024: 512,
-        ChunkSize.CHUNK_2048: 512,
-        ChunkSize.CHUNK_4096: 512,
+        ChunkSize.CHUNK_1024: 1024,
+        ChunkSize.CHUNK_2048: 2048,
+        ChunkSize.CHUNK_4096: 4096,
     }
 
     BACKEND_TYPE = "blocking"
@@ -63,6 +63,7 @@ class PVRecorderBackend(AudioBackend):
 
     def start_streaming(self) -> None:
         self.stream.start()
+        print("PVRecorderBackend: start_streaming", self.input_device_id)
 
     def stop_streaming(self) -> None:
         if self.stream:

@@ -1,10 +1,12 @@
 from enum import Enum
 from multiprocessing import Queue
-from typing import Optional
+from typing import Optional, Union
+
+import numpy as np
 
 import chimerapy.engine as cpe
 from chimerapy.orchestrator import source_node
-from chimerapy.pipelines.generic_nodes import audio_backends
+from chimerapy.pipelines.generic_nodes.audio_backends import get_backend
 from chimerapy.pipelines.generic_nodes.audio_backends.abc import (
     AudioBackend,
     AudioFormat,
@@ -21,7 +23,7 @@ class Backends(str, Enum):
 
 
 def _check_backend(backend: Backends) -> None:
-    audio_backends.get_backend(backend)
+    get_backend(backend)
 
 
 @source_node(name="CPPipelines_AudioNode")
@@ -71,35 +73,45 @@ class AudioNode(cpe.Node):
         self.started = False
         self.save_name = save_name
         self.chunk_key = chunk_key
+        self.data_reader = None
         super().__init__(name=name)
 
     def setup(self) -> None:
-        Backend = audio_backends.get_backend(self.options.pop("backend"))
-        if Backend.BACKEND_TYPE == "blocking":
+        Backend = get_backend(self.options.pop("backend"))
+        if Backend.BACKEND_TYPE == "nonblocking":
             self.queue = Queue()
             self.backend = Backend(
                 chunk_queue=self.queue,
+                input_device_id=self.options["input_device_id"],
                 audio_format=self.options["audio_format"],
                 sample_rate=self.options["sample_rate"],
                 chunk_size=self.options["chunk_size"],
             )
+            self.data_reader = self._nonblocking_read
         else:
             self.backend = Backend(
                 chunk_queue=None,
+                input_device_id=self.options["input_device_id"],
                 audio_format=self.options["audio_format"],
                 sample_rate=self.options["sample_rate"],
                 chunk_size=self.options["chunk_size"],
             )
+            self.data_reader = self._blocking_read
+
         self.backend.setup()
+
+    def _blocking_read(self) -> Union[bytes, np.ndarray]:
+        return self.backend.read()
+
+    def _nonblocking_read(self) -> Union[bytes, np.ndarray]:
+        return self.queue.get()
 
     def step(self) -> cpe.DataChunk:
         if not self.started:
             self.backend.start_streaming()
             self.started = True
-        if self.backend.BACKEND_TYPE == "nonblocking":
-            audio_data = self.queue.get()
-        else:
-            audio_data = self.backend.read()
+
+        audio_data = self.data_reader()
 
         if self.save_name is not None:
             save_info = self.backend.audio_save_info()

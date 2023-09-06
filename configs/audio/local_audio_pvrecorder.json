@@ -17,7 +17,7 @@
       "name": "local-audio",
       "kwargs": {
         "backend": "pvrecorder",
-        "input_device_id": 11,
+        "input_device_id": 3,
         "audio_format": "INT16",
         "sample_rate": "RATE_44100",
         "chunk_size": "CHUNK_512",
