@@ -63,7 +63,6 @@ class PVRecorderBackend(AudioBackend):
 
     def start_streaming(self) -> None:
         self.stream.start()
-        print("PVRecorderBackend: start_streaming", self.input_device_id)
 
     def stop_streaming(self) -> None:
         if self.stream:
