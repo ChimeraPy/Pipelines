@@ -1,4 +1,3 @@
-import json
 from typing import Any, Dict, Optional
 
 from deepgram import Deepgram
@@ -88,9 +87,9 @@ class DeepgramNode(cpe.Node):
             "conf": response["channel"]["alternatives"][0]["confidence"],
             "start": response["start"],
             "end": response["start"] + response["duration"],
-            "deepgram_json": json.dumps(response, indent=0),
         }
         self.save_tabular(name, transcript_data)
+        self.save_json(f"{name}-deepgram-responses", response)
 
     async def teardown(self) -> None:
         """Finish all transcriptions."""
