@@ -1,0 +1,62 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "129.59.104.153",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline for Speech to Text with deepgram"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "CPPipelines_AudioNode",
+      "name": "local-audio",
+      "kwargs": {
+        "backend": "pvrecorder",
+        "input_device_id": 3,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_512",
+        "save_name": "local-audio",
+        "chunk_key": "audio_chunk"
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_DeepgramNode",
+      "name": "stt-deepgram",
+      "kwargs": {
+        "name": "stt-deepgram",
+        "api_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "chunk_key": "audio_chunk",
+        "deepgram_options": {
+          "encoding": "linear16",
+          "channels": 1,
+          "sample_rate": 16000,
+          "language": "en-US"
+        }
+      },
+      "package": "chimerapy-pipelines"
+    }
+  ],
+  "adj": [
+    [
+      "local-audio",
+      "stt-deepgram"
+    ]
+  ],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": [
+      "local-audio",
+      "stt-deepgram"
+    ]
+  }
+}
