@@ -1,4 +1,3 @@
-import asyncio
 import json
 from typing import Any, Dict, Optional
 
@@ -38,7 +37,7 @@ class DeepgramNode(cpe.Node):
         self.chunk_key = chunk_key
         self.deepgram_options = deepgram_options or {}
 
-    def setup(self) -> None:
+    async def setup(self) -> None:
         """Setup the Deepgram client."""
         self.deepgram_client = Deepgram(self.api_key)
 
@@ -93,7 +92,7 @@ class DeepgramNode(cpe.Node):
         }
         self.save_tabular(name, transcript_data)
 
-    def teardown(self) -> None:
+    async def teardown(self) -> None:
         """Finish all transcriptions."""
         for transcriber in self.transcribers.values():
-            asyncio.create_task(transcriber.finish())
+            await transcriber.finish()
