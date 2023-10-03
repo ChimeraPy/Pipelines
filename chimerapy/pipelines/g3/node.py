@@ -152,3 +152,5 @@ class G3(cpe.Node):
 
     def teardown(self) -> None:
         self.g3.close()
+        self.scene_stream = None
+        self.gaze_stream = None
