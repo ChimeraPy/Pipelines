@@ -23,6 +23,8 @@ dependencies = [
     'mss',
     'chimerapy-orchestrator',
     'chimerapy-engine',
+    'pyaudio',
+    'pvrecorder',
 ]
 
 [project.optional-dependencies]

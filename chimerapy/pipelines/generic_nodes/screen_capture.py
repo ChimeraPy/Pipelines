@@ -68,6 +68,6 @@ class ScreenCapture(cpe.Node):
             self.save_video(self.save_name, arr, self.fps)
 
         data_chunk = cpe.DataChunk()
-        data_chunk.add(self.frame_key, arr)
+        data_chunk.add(self.frame_key, arr, "image")
 
         return data_chunk
