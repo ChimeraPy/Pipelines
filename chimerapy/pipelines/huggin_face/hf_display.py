@@ -21,13 +21,10 @@ class HFDisplay(cpe.Node):
         super().__init__(name=name)
 
     def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
-        print("reached here")
         for _, data_chunk in data_chunks.items():
             frame = data_chunk.get(self.frames_key)["value"]
-            
             cv2.imshow(frame.src_id, frame.arr)
             cv2.waitKey(1)
-        return 1
 
     def teardown(self) -> None:
         cv2.destroyAllWindows()
