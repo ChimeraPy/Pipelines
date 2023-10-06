@@ -1,8 +1,10 @@
 from typing import List, Optional
 
 import asyncio
+import base64
 import cv2
 import logging
+import numpy as np
 
 from g3pylib import connect_to_glasses
 
@@ -68,30 +70,32 @@ class G3(cpe.Node):
             self.hostname, using_zeroconf=True
         )
 
-        streams = await self.g3.stream_rtsp(scene_camera=True, gaze=True)
-        self.scene_stream = streams.scene_camera.decode()
-        self.gaze_stream = streams.gaze.decode()
+        (
+            self.scene_queue,
+            self.unsub_to_scene,
+        ) = await self.g3.rudimentary.subscribe_to_scene()
+        (
+            self.gaze_queue,
+            self.unsub_to_gaze,
+        ) = await self.g3.rudimentary.subscribe_to_gaze()
+
+        await self.g3.rudimentary.start_streams()
 
     async def step(self) -> cpe.DataChunk:
         ret_chunk = cpe.DataChunk()
 
-        frame_data, frame_timestamp = await self.scene_stream.get()
-        gaze_data, gaze_timestamp = await self.gaze_stream.get()
+        frame_timestamp, frame_data_b64 = await self.scene_queue.get()
+        gaze_timestamp, gaze_data = await self.gaze_queue.get()
 
-        # Match frame and gaze timestamps
-        while gaze_timestamp is None or frame_timestamp is None:
-            if frame_timestamp is None:
-                frame_data, frame_timestamp = await self.scene_stream.get()
-            if gaze_timestamp is None:
-                gaze_data, gaze_timestamp = await self.gaze_stream.get()
-        while gaze_timestamp < frame_timestamp:
-            gaze_data, gaze_timestamp = await self.gaze_stream.get()
-            while gaze_timestamp is None:
-                gaze_data, gaze_timestamp = await self.gaze_stream.get()
+        # print("frame_data, typeof ", str(type(frame_data)), frame_data)
+        # print("frame_timestamp, typeof ", str(type(frame_timestamp)), frame_timestamp)
+        # print("gaze_data, typeof ", str(type(gaze_data)), gaze_data)
+        # print("gaze_timestamp, typeof ", str(type(gaze_timestamp)), gaze_timestamp)
 
-        # logging.info(f"Frame timestamp: {frame_timestamp}")
-        # logging.info(f"Gaze timestamp: {gaze_timestamp}")
-        frame_data = frame_data.to_ndarray(format="bgr24")
+        frame_nparr = np.fromstring(base64.b64decode(frame_data_b64), dtype=np.uint8)
+        frame_data = cv2.imdecode(frame_nparr, cv2.IMREAD_COLOR)
+
+        # self.save_video("stream", frame_data, 25)
 
         if self.show_gaze and "gaze2d" in gaze_data:
             gaze2d = gaze_data["gaze2d"]
@@ -104,15 +108,18 @@ class G3(cpe.Node):
             # Draw gaze
             frame_data = cv2.circle(frame_data, fix, 10, (0, 0, 255), 3)
 
+        # TODO: figure out why CV2 window isn't showing
         ret_chunk.add(self.frame_key, frame_data, "image")
         ret_chunk.add("gaze_data", gaze_data)
-        # ret_chunk.add("frame_timestamp", frame_timestamp)
-        # ret_chunk.add("gaze_timestamp", gaze_timestamp)
+        #     # ret_chunk.add("frame_timestamp", frame_timestamp)
+        #     # ret_chunk.add("gaze_timestamp", gaze_timestamp)
 
         return ret_chunk
 
     @cpe.register  # .with_config(style="blocking")
     async def calibrate(self) -> bool:
+        # TODO: test if calibration works separately for rudimentary and regular
+        await self.g3.rudimentary.calibrate()
         return await self.g3.calibrate.run()
 
     # TODO: check recorder state before making start, stop, cancel calls
@@ -150,7 +157,10 @@ class G3(cpe.Node):
             recording.download_files(download_dir) for recording in self.g3.recordings
         )
 
-    def teardown(self) -> None:
-        self.g3.close()
-        self.scene_stream = None
-        self.gaze_stream = None
+    async def teardown(self) -> None:
+        # await self.streams.__aexit__()
+        await self.g3.rudimentary.stop_streams()
+        await self.unsub_to_scene
+        await self.unsub_to_gaze
+
+        await self.g3.close()
