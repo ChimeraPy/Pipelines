@@ -23,9 +23,12 @@ def register_nodes_metadata():
             "chimerapy.pipelines.yolov8.multi_save:MultiSaveNode",
             "chimerapy.pipelines.yolov8.display:DisplayNode",
             "chimerapy.pipelines.huggin_face.hf_video:HFVideo",
-            "chimerapy.pipelines.huggin_face.hf_node:HFNode",
+            "chimerapy.pipelines.huggin_face.hf_cv_node:HFCVNode",
             "chimerapy.pipelines.huggin_face.hf_display:HFDisplay",
             "chimerapy.pipelines.huggin_face.hf_save:HFSaveNode",
+            "chimerapy.pipelines.huggin_face.hf_text:HFText",
+            "chimerapy.pipelines.huggin_face.hf_text_node:HFTextNode",
+            
         ],
     }
 

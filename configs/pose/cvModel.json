@@ -29,7 +29,7 @@
       },
      
       {
-        "registry_name": "CPPipelines_HFNode",
+        "registry_name": "CPPipelines_HFCVNode",
         "name": "pose",
         "kwargs": {
           "model_name": "hustvl/yolos-tiny"

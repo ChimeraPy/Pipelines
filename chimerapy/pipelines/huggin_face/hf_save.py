@@ -1,3 +1,5 @@
+##TODO - Change save format to correspond to different models
+
 from typing import Dict, List
 
 import numpy as np
@@ -79,7 +81,7 @@ class HFSaveNode(cpe.Node):
         source_key: str,
         frames_key: str = "frame",
         name: str = "SaveNode",
-        filename: str = "yolo_results",
+        filename: str = "hf_results",
         file_format: str = "df",
         fps: int = 30,
     ) -> None:

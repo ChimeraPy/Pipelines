@@ -8,8 +8,8 @@ from PIL import Image
 from .data import YOLOFrame
 
 
-@step_node(name="CPPipelines_HFNode")
-class HFNode(cpe.Node):
+@step_node(name="CPPipelines_HFCVNode")
+class HFCVNode(cpe.Node):
 
     """A node to apply Hugging Face models on video src.
 
@@ -40,7 +40,7 @@ class HFNode(cpe.Node):
         frames_key: str = "frame",
     ):
         self.model_name = model_name
-        # self.weights = weights
+        self.device = 0 if device == "cuda" else "cpu"
         self.task = task
         self.frames_key = frames_key
     
@@ -49,18 +49,22 @@ class HFNode(cpe.Node):
 
     def setup(self):
         from transformers import pipeline
+        
         try:
             if self.task != "":
-                self.model = pipeline(task = self.task, model = self.model_name, device_map="auto")
+                if self.model_name != "":
+                    self.model = pipeline(task = self.task, model = self.model_name, device = self.device)
+                else:
+                    self.model = pipeline(task = self.task, device = self.device)
             else:
-                self.model = pipeline(model = self.model_name)
+                self.model = pipeline(model = self.model_name, device = self.device)
 
             print(f"Successfully imported model: {self.model_name}")
         except AttributeError:
             print(f"Failed to import model: {self.model_name}. Model not found in transformers library.")
 
     def step(self, data_chunks: Dict[str, cpe.DataChunk]) -> cpe.DataChunk:
-        # Aggregate all inputs
+
         ret_chunk = cpe.DataChunk()
 
         for _, data_chunk in data_chunks.items():
