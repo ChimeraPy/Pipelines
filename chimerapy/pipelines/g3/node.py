@@ -80,8 +80,17 @@ class G3(cpe.Node):
         ) = await self.g3.rudimentary.subscribe_to_gaze()
 
         await self.g3.rudimentary.start_streams()
+        self.is_recording = False
 
     async def step(self) -> cpe.DataChunk:
+        # start on-device recording if node enters RECORDING state
+        if self.state.fsm == "RECORDING" and not self.is_recording:
+            await self.g3.recorder.start()
+            self.is_recording = True
+        elif self.state.fsm == "STOPPED" and self.is_recording:
+            await self.g3.recorder.stop()
+            self.is_recording = False
+
         ret_chunk = cpe.DataChunk()
 
         frame_timestamp, frame_data_b64 = await self.scene_queue.get()
@@ -110,7 +119,9 @@ class G3(cpe.Node):
 
         # TODO: figure out why CV2 window isn't showing
         ret_chunk.add(self.frame_key, frame_data, "image")
+        # print("---------------------ADDED FRAME DATA------------------------")
         ret_chunk.add("gaze_data", gaze_data)
+        # print("---------------------ADDED GAZE DATA------------------------")
         #     # ret_chunk.add("frame_timestamp", frame_timestamp)
         #     # ret_chunk.add("gaze_timestamp", gaze_timestamp)
 
@@ -124,18 +135,18 @@ class G3(cpe.Node):
 
     # TODO: check recorder state before making start, stop, cancel calls
     # TODO: add visual cue to indicate recorder state, e.g. UI components or greyed out buttons
-    @cpe.register
-    async def start_recording(self) -> bool:
-        return await self.g3.recorder.start()
+    # @cpe.register
+    # async def start_recording(self) -> bool:
+    #     return await self.g3.recorder.start()
 
     @cpe.register
     async def cancel_recording(self) -> None:
         await self.g3.recorder.cancel()
 
-    @cpe.register
-    async def stop_recording(self) -> bool:
-        # TODO: check if recording has started
-        return await self.g3.recorder.stop()
+    # @cpe.register
+    # async def stop_recording(self) -> bool:
+    #     # TODO: check if recording has started
+    #     return await self.g3.recorder.stop()
 
     @cpe.register
     async def take_snapshot(self) -> bool:
@@ -159,6 +170,7 @@ class G3(cpe.Node):
 
     async def teardown(self) -> None:
         # await self.streams.__aexit__()
+        await self.g3.recorder.stop()
         await self.g3.rudimentary.stop_streams()
         await self.unsub_to_scene
         await self.unsub_to_gaze
