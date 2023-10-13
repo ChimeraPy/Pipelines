@@ -16,7 +16,9 @@
       "registry_name": "CPPipelines_ScreenCapture",
       "name": "screen-capture",
       "kwargs": {
-        "scale": 0.25
+        "scale": 0.25,
+        "save_name": "screen-capture",
+        "save_timestamp": true
       },
       "package": "chimerapy-pipelines"
     },

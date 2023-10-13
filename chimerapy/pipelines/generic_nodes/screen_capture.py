@@ -1,4 +1,5 @@
 import typing
+from datetime import datetime
 
 import cv2
 import imutils
@@ -29,6 +30,8 @@ class ScreenCapture(cpe.Node):
         The monitor to capture
     save_name: str, optional (default: 0)
          If a string is provided, save the video (prefixed with this name)
+    save_timestamp: bool, optional (default: False)
+        If True, append a timestamp to the frames when saving (top left corner)
     """
 
     def __init__(
@@ -39,6 +42,7 @@ class ScreenCapture(cpe.Node):
         monitor: int = 0,
         name="ScreenCaptureNode",
         save_name: typing.Optional[str] = None,
+        save_timestamp: bool = False,
     ):
         self.scale = scale
         self.fps = fps
@@ -46,6 +50,7 @@ class ScreenCapture(cpe.Node):
         self.capture = None
         self.monitor = monitor
         self.save_name = save_name
+        self.save_timestamp = save_timestamp
         super().__init__(name=name)
 
     def setup(self):
@@ -63,6 +68,8 @@ class ScreenCapture(cpe.Node):
         arr = np.array(img)
         arr = cv2.cvtColor(arr, cv2.COLOR_BGRA2BGR)
         arr = imutils.resize(arr, width=int(arr.shape[1] * self.scale))
+        if self.save_timestamp:
+            arr = self.append_timestamp(arr)
 
         if self.save_name:
             self.save_video(self.save_name, arr, self.fps)
@@ -71,3 +78,16 @@ class ScreenCapture(cpe.Node):
         data_chunk.add(self.frame_key, arr, "image")
 
         return data_chunk
+
+    def append_timestamp(self, arr):
+        timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        cv2.putText(
+            arr,
+            timestamp,
+            (10, 25),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 0, 255),
+            2,
+        )
+        return arr
