@@ -1,5 +1,5 @@
 {
-  "mode": "preview",
+  "mode": "record",
   "workers": {
     "manager_ip": "172.16.80.147",
     "manager_port": 9001,

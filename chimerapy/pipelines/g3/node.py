@@ -85,11 +85,13 @@ class G3(cpe.Node):
     async def step(self) -> cpe.DataChunk:
         # start on-device recording if node enters RECORDING state
         if self.state.fsm == "RECORDING" and not self.is_recording:
-            await self.g3.recorder.start()
-            self.is_recording = True
+            if await self.g3.recorder.start():
+                self.is_recording = True
+                print("\n---------------Recording Started On Device---------------")
         elif self.state.fsm == "STOPPED" and self.is_recording:
-            await self.g3.recorder.stop()
-            self.is_recording = False
+            if await self.g3.recorder.stop():
+                self.is_recording = False
+                print("\n---------------Recording Stopped On Device---------------")
 
         ret_chunk = cpe.DataChunk()
 
@@ -104,7 +106,7 @@ class G3(cpe.Node):
         frame_nparr = np.fromstring(base64.b64decode(frame_data_b64), dtype=np.uint8)
         frame_data = cv2.imdecode(frame_nparr, cv2.IMREAD_COLOR)
 
-        # self.save_video("stream", frame_data, 25)
+        self.save_video("stream", frame_data, 25)
 
         if self.show_gaze and "gaze2d" in gaze_data:
             gaze2d = gaze_data["gaze2d"]
