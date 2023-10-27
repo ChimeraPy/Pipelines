@@ -87,45 +87,45 @@ class G3(cpe.Node):
         if self.state.fsm == "RECORDING" and not self.is_recording:
             if await self.g3.recorder.start():
                 self.is_recording = True
-                print("\n---------------Recording Started On Device---------------")
+                print("\n---------------Started Recording On Device---------------")
         elif self.state.fsm == "STOPPED" and self.is_recording:
             if await self.g3.recorder.stop():
                 self.is_recording = False
-                print("\n---------------Recording Stopped On Device---------------")
+                print("\n---------------Stopped Recording On Device---------------")
 
         ret_chunk = cpe.DataChunk()
 
         frame_timestamp, frame_data_b64 = await self.scene_queue.get()
         gaze_timestamp, gaze_data = await self.gaze_queue.get()
 
-        # print("frame_data, typeof ", str(type(frame_data)), frame_data)
-        # print("frame_timestamp, typeof ", str(type(frame_timestamp)), frame_timestamp)
-        # print("gaze_data, typeof ", str(type(gaze_data)), gaze_data)
-        # print("gaze_timestamp, typeof ", str(type(gaze_timestamp)), gaze_timestamp)
+        # add timestamp to gaze data
+        gaze_data["timestamp"] = gaze_timestamp
 
+        # convert base64-encoded frame data string to cv2 image
         frame_nparr = np.fromstring(base64.b64decode(frame_data_b64), dtype=np.uint8)
         frame_data = cv2.imdecode(frame_nparr, cv2.IMREAD_COLOR)
-
-        self.save_video("stream", frame_data, 25)
 
         if self.show_gaze and "gaze2d" in gaze_data:
             gaze2d = gaze_data["gaze2d"]
             logging.info(f"Gaze2d: {gaze2d[0]:9.4f},{gaze2d[1]:9.4f}")
 
-            # Convert rational (x,y) to pixel location (x,y)
+            # convert rational (x,y) to pixel location (x,y)
             h, w = frame_data.shape[:2]
             fix = (int(gaze2d[0] * w), int(gaze2d[1] * h))
 
-            # Draw gaze
+            # draw gaze on frame_data
             frame_data = cv2.circle(frame_data, fix, 10, (0, 0, 255), 3)
+
+            # save gaze_data to file
+            self.save_json("gaze-data", gaze_data)
+
+        # self.save_video("stream", frame_data, 25)
 
         # TODO: figure out why CV2 window isn't showing
         ret_chunk.add(self.frame_key, frame_data, "image")
         # print("---------------------ADDED FRAME DATA------------------------")
         ret_chunk.add("gaze_data", gaze_data)
         # print("---------------------ADDED GAZE DATA------------------------")
-        #     # ret_chunk.add("frame_timestamp", frame_timestamp)
-        #     # ret_chunk.add("gaze_timestamp", gaze_timestamp)
 
         return ret_chunk
 
