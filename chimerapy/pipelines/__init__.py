@@ -22,6 +22,7 @@ def register_nodes_metadata():
             "chimerapy.pipelines.yolov8.multi_vid_pose:YoloV8Node",
             "chimerapy.pipelines.yolov8.multi_save:MultiSaveNode",
             "chimerapy.pipelines.yolov8.display:DisplayNode",
+            "chimerapy.pipelines.speech_to_text.deepgram_node:DeepgramNode",
         ],
     }
 

@@ -26,7 +26,8 @@ dependencies = [
     'chimerapy-orchestrator',
     'chimerapy-engine',
     'pyaudio',
-    'pvrecorder'
+    'pvrecorder',
+    'deepgram-sdk'
 ]
 
 [project.optional-dependencies]
