@@ -1,0 +1,42 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "172.16.80.147",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "local",
+        "id": "local",
+        "description": "local worker for the MMLA pipeline demo with a G3 node"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "CPPipelines_G3",
+      "name": "g3-instance",
+      "kwargs": {
+        "hostname": "TG03B-080201037351",
+        "show_gaze": true
+      },
+      "package": "chimerapy-pipelines"
+    },
+    {
+      "registry_name": "CPPipelines_ShowWindows",
+      "name": "show",
+      "package": "chimerapy-pipelines"
+    }
+  ],
+  "adj": [["g3-instance", "show"]],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "local": ["g3-instance", "show"]
+  },
+  "timeouts": {
+    "commit_timeout": 120,
+    "shutdown_timeout": 300
+  }
+}

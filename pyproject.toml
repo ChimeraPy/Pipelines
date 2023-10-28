@@ -2,15 +2,13 @@
 name = "chimerapy-pipelines"
 version = "0.0.1"
 description = "Respository of sharable pipelines for ChimeraPy"
-license = {file = "LICENSE.txt"}
+license = { file = "LICENSE.txt" }
 readme = "README.md"
 requires-python = ">3.6"
 
 keywords = ["education", "multimodal", "data", "learning", "analytics"]
 
-classifiers = [
-    "Programming Language :: Python :: 3"
-]
+classifiers = ["Programming Language :: Python :: 3"]
 
 dependencies = [
     'numpy',
@@ -26,7 +24,7 @@ dependencies = [
     'chimerapy-orchestrator',
     'chimerapy-engine',
     'pyaudio',
-    'pvrecorder'
+    'pvrecorder',
 ]
 
 [project.optional-dependencies]
@@ -40,16 +38,18 @@ test = [
 
 mfsort = [
     'mf_sort[yolo] @ git+https://github.com/kbvatral/MF-SORT.git@master#egg=mf_sort',
-    'ultralytics'
+    'ultralytics',
 ]
 
 embodied = [
     'elp @ git+http://github.com/oele-isis-vanderbilt/EmbodiedLearningProject@main#egg=elp',
-    'l2cs @ git+https://github.com/edavalosanaya/L2CS-Net.git@main#egg=l2cs'
+    'l2cs @ git+https://github.com/edavalosanaya/L2CS-Net.git@main#egg=l2cs',
 ]
 
-yolov8 = [
-    'ultralytics'
+yolov8 = ['ultralytics']
+
+g3 = [
+    'g3pylib @ git+https://github.com/albertna/g3pylib.git@feature/download-recording#egg=g3pylib',
 ]
 
 [project.urls]
@@ -72,14 +72,12 @@ where = ["."]
 ignore = ["E501"]
 select = ["E", "W", "F", "C", "B", "I"]
 ignore-init-module-imports = true
-fixable = ["I001"]  # isort fix only
+fixable = ["I001"]                      # isort fix only
 extend-exclude = ["run.py"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402", "F401"]
 "chimerapy/pipelines/__version__.py" = ["E402"]
-
-
 
 
 [project.entry-points."chimerapy.orchestrator.nodes_registry"]
@@ -96,7 +94,7 @@ log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filena
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 # Timeout
-faulthandler_timeout=300
+faulthandler_timeout = 300
 
 # Ignore warnings
 filterwarnings = "ignore::DeprecationWarning"
