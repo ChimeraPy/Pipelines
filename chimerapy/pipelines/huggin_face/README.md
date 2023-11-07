@@ -1,7 +1,15 @@
 # Integrating YOLOv8
 ## Nodes
-- **hf_node: HFNode** -- This node accepts multiple video node and applies specified Hugging Face models on frames of those videos. Need to specify specific model in the configuration file. Currently testing with models with computer vision tasks.
-- **hf_display: HFDisplay** -- This display the results alongside the source video.
+- **hf_text_node: HFTextNode** -- This node accepts textual input (right now supplied with hf_text) and applies specified Hugging Face models on input text. Need to specify specific model/task in the configuration file. 
+- **hf_cv_node: HFCVNode** -- This node accepts input frames(right now supplied with hf_video) and applies specified Hugging Face CV models on input frames. Need to specify specific model/task in the configuration file. 
+
+- **hf_vqa: HFVQANode** -- This node accepts input frames & question(right now supplied with data_vqa) and applies specified VQA models on input frames. Need to specify specific model/task in the configuration file. 
+
+* Right now all the outputs are to command line...
+
+## Example Use
+- Example configs for all three nodes are in configs/huggingface folder, there is one for each node
+
 
 
 **Using HF models require installation of additional packages:**

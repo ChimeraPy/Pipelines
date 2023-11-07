@@ -4,7 +4,7 @@ import time
 
 @source_node(name="CPPipelines_HFText")
 class HFText(cpe.Node):
-    """A text node that returns a text object with identifiable metadata."""
+    """A text node that reads in textual input from a text file"""
 
     def __init__(self,
                   name: str = "text",
@@ -23,6 +23,7 @@ class HFText(cpe.Node):
         if self.file:
             line = self.file.readline()
             # simulate input
+            # at rate of 1 line per second
             time.sleep(1)
             if line:
                 ret_chunk = cpe.DataChunk()
@@ -31,7 +32,6 @@ class HFText(cpe.Node):
                     self.data_key,
                     line
                 )
-
                 return ret_chunk
         return None
 

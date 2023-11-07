@@ -25,9 +25,10 @@ def register_nodes_metadata():
             "chimerapy.pipelines.huggin_face.hf_video:HFVideo",
             "chimerapy.pipelines.huggin_face.hf_cv_node:HFCVNode",
             "chimerapy.pipelines.huggin_face.hf_display:HFDisplay",
-            "chimerapy.pipelines.huggin_face.hf_save:HFSaveNode",
             "chimerapy.pipelines.huggin_face.hf_text:HFText",
             "chimerapy.pipelines.huggin_face.hf_text_node:HFTextNode",
+            "chimerapy.pipelines.huggin_face.data_vqa:HFVQA",
+            "chimerapy.pipelines.huggin_face.hf_vqa:HFVQANode",
             
         ],
     }

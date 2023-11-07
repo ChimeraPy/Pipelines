@@ -9,7 +9,7 @@ from PIL import Image
 @step_node(name="CPPipelines_HFTextNode")
 class HFTextNode(cpe.Node):
 
-    """A node to apply Hugging Face models on text src.
+    """A node to apply Hugging Face models on text inputs.
 
     Parameters:
     ----------
