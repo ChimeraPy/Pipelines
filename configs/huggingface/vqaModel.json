@@ -1,0 +1,55 @@
+{
+    "mode": "record",
+    "workers": {
+      "manager_ip": "129.59.104.153",
+      "manager_port": 9001,
+      "instances": [
+        {
+          "name": "local",
+          "id": "local",
+          "description": "local worker for the MMLA pipeline demo with a video node"
+        }
+      ]
+    },
+    "nodes": [
+      {
+        "registry_name": "CPPipelines_HFVQA",
+        "name": "input",
+        "kwargs": {
+          "video_src":"./configs/huggingface/vid.mp4",
+          "data_key": "data",
+          "text_src": "How many people is in the image?"
+        },
+        "package": "chimerapy-pipelines"
+      },
+      {
+        "registry_name": "CPPipelines_HFVQANode",
+        "name": "model",
+        "kwargs": {
+          "data_key": "data",
+          "task": "visual-question-answering"
+        },
+        "package": "chimerapy-pipelines"
+      }
+    ],
+    "adj": [
+      [
+        "input",
+        "model"
+      ]
+    ],
+    "manager_config": {
+      "logdir": "cp-logs",
+      "port": 9001
+    },
+    "mappings": {
+      "local": [
+        "input",
+        "model"
+      ]
+    },
+    "timeouts": {
+      "commit_timeout": 500,
+      "shutdown_timeout": 300
+    }
+  }
